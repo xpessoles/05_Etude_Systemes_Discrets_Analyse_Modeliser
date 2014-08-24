@@ -1,0 +1,479 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\usepackage[%
+    pdftitle={CI5 SN - Systèmes Séquentiels},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 2 -- Étude des systèmes séquentiels}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques -- Cours\\
+Chapitre 2 -- Étude des systèmes séquentiels}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+2013 -- 2014 \\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=.7\textwidth]{images/digicode}
+%
+%\textit{Digicode}
+%\end{center}
+%\end{minipage}\hfill
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=.8\textwidth]{images/transistor_ttl_nand}
+%
+%\textit{Transistor TTL (permettant de réaliser des opérations logiques) }
+%\end{center}
+%\end{minipage}\hfill
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=.8\textwidth]{images/inductif}
+%
+%\textit{Détecteur inductif}
+%\end{center}
+%\end{minipage}\hfill
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=\textwidth]{images/capteur_contact}
+%
+%\textit{Détecteur à contact}
+%\end{center}
+%\end{minipage}
+%
+%Un des objectifs de l'automaticien est de concevoir la partie commande qui traite les informations et élabore les ordres. Ce cours étudie le cas où les informations et les ordres élaborés sont des variables binaires.
+
+Les systèmes à événements discrets sont des systèmes logiques. Ils diffèrent des systèmes combinatoires par la prise en compte d'une <<mémoire>> de l'état du système. En effet, alors que dans un système combinatoire, une même combinaison des entrées provoque les mêmes actions en sortie, dans les systèmes séquentiels, une même combinaison des entrées peut provoquer des sorties différentes (\textit{Exemple : interrupteur va-et-vient d'une installation électrique}).
+
+\begin{savoir}
+\textsc{Savoirs :}
+\begin{itemize}
+\item \textbf{Mod - C5.1 :} Modélisation des systèmes à événements discrets (fonctions logiques, tables de vérité).
+\end{itemize}
+\end{savoir}
+
+%\newpage 
+
+\setlength{\parskip}{0ex plus 0.2ex minus 0ex}
+ \renewcommand{\contentsname}{}
+ \renewcommand{\baselinestretch}{1}
+
+\tableofcontents
+
+ \renewcommand{\baselinestretch}{1.2}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+% \vspace{1cm}
+\textit{Ce document évolue. Merci de signaler toutes erreurs ou coquilles.}
+
+\section{La fonction mémoire}
+
+\subsection{Le chronogramme}
+Le chronogramme est un outil permettant d'afficher l'état des entrées et des sorties en fonction du temps. Le chronogramme suivant indique le fonctionnement d'une lampe. L'interrupteur <<va-et-vient>> est relié à un relais. 
+
+\begin{minipage}[c]{.47\linewidth}
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/Chrono1}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.47\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/stm1}
+\end{center}
+\end{minipage}
+
+Ainsi, pour une même combinaison des entrées, on observe des états différents de la sortie.
+
+Le même constat peut être dresser à partir du fonctionnement d'un moteur (\textit{Exemple : fonctionnement du système Doshydro}).
+
+
+\begin{minipage}[c]{.47\linewidth}
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/Chrono2}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.47\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/Moteur}
+
+\includegraphics[width=.95\textwidth]{images/Moteur_im}
+\end{center}
+\end{minipage}
+
+Ici aussi, on remarque qu'une même combinaison des entrées ($a=m=0$) peut conduire à un état de marche ou d'arrêt du moteur. Une variable interne, ici, une mémoire, permet de mémoriser l'état du moteur. 
+
+\subsection{Notion de mémoire}
+
+La mémorisation des états est à la base de l'existence des systèmes séquentiels. En notant $x$ la variable interne d'un système, on lui associe une mémoire.
+
+ On peut noter l'existence des mémoires permanentes (qui conservent l'état des variables en cas de coupure d'énergie) et les mémoires volatiles (qui perdent l'état des variables en cas de coupure d'énergie).  
+ 
+ Les mémoires peuvent être réalisées de façon optique (blue-ray), électropneumatiques (distributeurs électropneumatiques bistables), mangnétiques (disques durs), électriques (grâce à des transistors, mémoire flash), électromagnétique (relais). 
+ 
+ Dans les systèmes automatisés industriels, le relais auto maintenu électromagnétique est un élément clef de la mémorisation des états. 
+
+\begin{center}
+\includegraphics[width=\textwidth]{images/relais}
+\end{center}
+
+Lorsque l'utilisateur presse le bouton $m$, le relais $X$ est activé. Ainsi, la variable $x$ est mise à 1 ce qui provoque l'éclairage de la lampe $L$. \'A ce stade, si on relâche l'interrupteur $m$ le relais $X$ est désactivé, la variable $x$ passe à l'état 0 et la lampe s'éteint.
+
+\begin{prob}
+Comment réaliser une mémoire par l'utilisation d'un relais ? 
+
+Que se passe-t-il lors de l'appui simultané sur marche et arrêt. 
+\end{prob}
+
+\subsection{Réalisation d'une mémoire}
+\subsubsection{Mémoire à effacement prioritaire}
+Dans ce cas, le moteur s'allume lorsque $m$ est pressé. Il est éteint lorsque $a$ est pressé ou lorsque $m$ et $a$ sont pressés simultanément.
+ 
+ 
+\begin{minipage}[c]{.5\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/mem_eff}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.47\linewidth}
+Il est possible de traduire le fonctionnement du moteur par l'équation booléenne suivante : 
+$$
+M = \overline{a} \cdot \left(m +  x \right)
+$$
+Ainsi dans un premier temps, en appuyant sur $m$ le relais est actionné, $x$ passe donc à 1 dans le circuit de puissance (allumant ainsi le moteur) \textbf{et} dans le circuit de commande. On effectue ainsi un \textbf{auto maintien}. 
+
+On comprend aisément qu'un appui simultané sur $a$ et $m$ provoque une désactivation du relais et donc un arrêt du moteur. 
+\end{minipage}
+
+ Lorsqu'on utilise une technologie électronique, il est courant d'utiliser de réaliser un câblage en utilisant des cellules NOR. 
+
+\vspace{.2cm}
+
+\begin{minipage}[c]{.3\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/mem_eff_nor}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\begin{tabular}{|c|c|c||c|}
+\hline
+m & a & x & Q \\
+\hline \hline
+0 & 0 & 0 & 0 \\\hline
+0 & 0 & 1 & 1 \\\hline
+0 & 1 & 0 & 0 \\\hline
+0 & 1 & 1 & 0 \\\hline
+1 & 0 & 0 & 1 \\\hline
+1 & 0 & 1 & 1 \\\hline
+1 & 1 & 0 & 0 \\\hline
+1 & 1 & 1 & 0 \\\hline
+\end{tabular}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+Il  n'est pas directement possible d'écrire directement la table de vérité de la sortie $Q$ en fonction de $a$ et de $b$. Il faut avoir recours à une variable interne $x$. 
+
+On retrouve bien l'équation précédente : 
+$$
+Q = \overline{m}\cdot \overline{a} \cdot x + \underbrace{m\cdot \overline{a} \cdot \overline{x} 
++ m\cdot \overline{a} \cdot x}_{m\cdot \overline{a} } = \overline{a} \left(\overline{m} \cdot x + m\right)
+= \overline{a} \left( x + m\right)
+$$
+
+\end{minipage}
+
+\paragraph*{Les bascules}
+Le montage précédent est appelé une bascule SR (Set -- Reset). Suivant les cas d'utilisation, il en existe plusieurs. 
+   
+  
+\vspace{.2cm}
+
+\begin{minipage}[c]{.15\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/basculeRS}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\begin{tabular}{|c|c||c|c|}
+\hline
+$S$ & $R$ &  $Q_n$ & $\overline{Q_{n}}$ \\
+\hline \hline
+0 & 0 & $Q_{n-1}$ & $\overline{Q_{n-1}}$ \\ \hline
+0 & 1 & 0 & 1 \\\hline
+1 & 0 & 1 & 0 \\\hline
+1 & 1 & 0 & 0 \\\hline
+1 & 1 & -- & -- \\\hline
+\end{tabular}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.53\linewidth}
+La bascule RS est caractérisée par deux états : 
+\begin{itemize}
+\item S (Set) caractérise <<la mise à 1>>;
+\item R (Reset) caractérise <<la mise à 0>>.
+\end{itemize}
+
+$Q_n$ et $\overline{Q_n}$ caractérisent les deux sorties stables. La combinaison $S=R=1$ est à éviter car elle conduit à des dysfonctionnement. Pour palier à ce problème, on utilise une bascule JK. 
+\end{minipage}
+   	
+  \vspace{.2cm}
+\hfill
+\begin{minipage}[c]{.15\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/basculeJK}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.4\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/basculeJK_logi}
+\end{center}
+
+\end{minipage} \hfill
+\begin{minipage}[c]{.35\linewidth}
+
+\begin{center}
+\begin{tabular}{|c|c||c|c|}
+\hline
+$J$ & $K$ &  $Q_n$ & $\overline{Q_{n}}$ \\
+\hline \hline
+0 & 0 & $Q_{n-1}$ & $\overline{Q_{n-1}}$ \\ \hline
+0 & 1 & 0 & 1 \\\hline
+1 & 0 & 1 & 0 \\\hline
+1 & 1 & 0 & 0 \\\hline
+1 & 1 & $Q_{n-1}$ & $\overline{Q_{n-1}}$ \\\hline
+\end{tabular}
+\end{center}
+\end{minipage}\hfill
+
+\section{Modélisation du comportement des systèmes séquentiels \cite{pb}}
+
+Les outils privilégiés pour décrire le fonctionnement d'un système séquentiel seront les diagramme SysML. Le diagramme de séquence (CI 1 -- Chapitre 6) permet de présenter la succession d'étapes liés à un cas d'utilisation d'un point de vue utilisateur. Le diagramme d'état et le diagramme d'activité (CI 1 -- Chapitre 7 \& 8) permettent de décrire l'évolution interne du système. 
+                           
+
+\subsection{Construction et lecture d'un diagramme d'états}
+
+\begin{methode}
+  Pour chaque activité, il faut définir un état représenté par un noeud. Au cas où
+aucune activité n’est souhaitée, c’est un état d’attente.
+
+Il faut ensuite identifier les cas d’évolution du système, c'est-à-dire les transitions
+possibles d’un état à un autre. On trace alors un lien entre les n\oe{}uds
+correspondants. Chaque transition peut être qualifiée par un évènement, une
+condition de garde et un effet.
+\end{methode}
+
+\begin{exemple}
+\textit{Commande tout ou rien d'un moteur}
+
+\begin{minipage}[c]{.48\linewidth}
+Deux états internes du système cohabitent. Dans un cas le moteur est en marche, dans l’autre il est à l’arrêt.
+
+Les conditions de passage d’un état à un autre se font à l’aide des variables d’entrée arrêt « a » et marche « m ».
+
+
+L’activité « marche moteur » peut être détaillée dans un diagramme d’activité. Elle comporterait l’action « distribuer l’énergie ». Son exécution ne nécessite pas de temps significatif, elle est associée à un ordre de commande en direction du préactionneur du moteur (un contacteur électrique à arrêt prioritaire).
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/Moteur2}
+\end{center}
+\end{minipage}
+
+
+\end{exemple}
+
+\subsection{Utilisation des pseudo-états}
+
+
+\begin{methode}
+Les pseudo-états permettent d’utiliser des fonctionnalités avancées sans trop compliquer le diagramme d’état avec le formalisme de base.
+Il est alors possible de montrer des sélections de séquences d’états (évolutions avec alternatives), des structures parallèles (évolutions simultanées), etc.
+\end{methode}
+
+\begin{exemple}
+
+\textit{Commande tout ou rien (TOR) d’un moteur}
+
+Un diagramme d’états « choix de mode » de niveau hiérarchique supérieur à celui décrit précédemment (« commande moteur »), permet de le démarrer selon deux modes :
+\begin{itemize}
+\item « mode normal » : moteur à l’arrêt dans l’« état d’attente »;
+\item « mode historique » : dernier état avant que l’on sorte du diagramme « commande moteur » (« état d’attente » ou « état de marche »).
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=.7\textwidth]{images/ChoixMode}
+\end{center}
+\end{exemple}
+
+\section{Structures algorithmiques}
+\subsection{Affectation}
+L’affectation d’une valeur à une variable peut se faire à l’aide d’une action. Cela ne prend pas
+de temps significatif.
+
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/Affectation_stm}
+
+\textit{Diagramme d'états -- Affectation}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/Affectation_act}
+
+\textit{Diagramme d'activité -- Affectation}
+\end{center}
+\end{minipage}
+
+\subsection{Groupe d'instructions}
+\begin{minipage}[c]{.68\linewidth}
+Un groupe ou un bloc d’instructions peut être une séquence d’un diagramme
+d’activité. Cela correspond à une succession d’actions et / ou d’activités.
+\end{minipage} \hfill
+\begin{minipage}[c]{.3\linewidth}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/Groupe_act}
+
+\textit{Diagramme d'activité -- Affectation}
+\end{center}
+\end{minipage}
+
+
+\subsection{Fonctions et procédures}
+La décomposition d’un algorithme en fonctions et procédures, permet :
+\begin{itemize}
+\item d’une part, de scinder une problématique générale en plusieurs problématiques
+élémentaires;
+\item d’autre part, de pouvoir réutiliser des sous-programmes réalisant des tâches élémentaires.
+Une procédure comporte une succession d’instructions mais ne renvoie rien.
+\end{itemize}
+
+
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/Fonctions_stm}
+
+\textit{Diagramme d'états -- Affectation}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.7\textwidth]{images/Affectation_act}
+
+\textit{Diagramme d'activité -- Affectation}
+\end{center}
+\end{minipage}
+
+
+A la fin de l’exécution d’une fonction, il y a le retour d’une valeur, d’une liste, d’un objet, etc.
+\subsection{Structure alternative (conditionnelle)}
+
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/Condition_stm}
+
+\textit{Diagramme d'états -- Structure alternative complète}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/Condition_act}
+
+\textit{Diagramme d'activité -- Structure alternative avec saut}
+\end{center}
+\end{minipage}
+
+\subsection{Structure répétitive (itérative)}
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/Iteratif_stm}
+
+\textit{Diagramme d'états -- Tant que condition vraie faire ...}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/Iteratif_act}
+
+\textit{Diagramme d'activité -- Répéter... jusqu'à condition vraie}
+\end{center}
+\end{minipage}
+
+
+\begin{exemple}
+Pour variable = valeur initiale, jusqu'à valeur maximale, faire...
+\end{exemple}
+
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/compteur_stm}
+
+\textit{Diagramme d'états}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/compteur_act}
+
+\textit{Diagramme d'activité}
+\end{center}
+\end{minipage}
+
+\begin{thebibliography}{2}
+%\bibitem{dv}{Supports de cours de David Violeau, Lycée Saint-Louis, Paris.}
+\bibitem{sg}{Stéphane Genouël, \textit{Systèmes Séquentiels -- Fonction mémoire}, Cours de MPSI -- PCSI, Lycée Chateaubriand, Rennes, \url{http://stephane.genouel.free.fr/}.} 
+\bibitem{pb}{Patrick Beynet et Al., \textit{Sciences Industrielles pour l'Ingénieur, MPSI -- PCSI}, Éditions Ellipses.}
+\bibitem{3}{Pierre Debout, \textit{Automatique -- Systèmes à événements discrets}, Cours de PCSI.}
+\bibitem{4}{Thierry Schanen, \textit{Guide des automatismes 9.1}, Pos Industry, 2009.}
+%\bibitem{fm}{Supports de cours de Florestan Mathurin, Lycée Bellevue, Toulouse.}
+%\bibitem{jpp}{Supports de cours de Jean-Pierre Pupier, Lycée Rouvière, Toulon}
+
+\end{thebibliography}
+
+\end{document}\end{document}
+
+

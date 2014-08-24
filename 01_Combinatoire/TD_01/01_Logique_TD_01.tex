@@ -1,0 +1,222 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\newboolean{td}
+\setboolean{td}{true}
+
+
+\usepackage[%
+    pdftitle={CI5 SED - Systèmes Logiques},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 1 -- Étude des systèmes logiques (appelés aussi combinatoires)}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques -- TD\\
+Chapitre 1 -- Étude des systèmes logiques}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+2013 -- 2014 \\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+\begin{center}
+\large{\textsc{Travaux Dirigés}}
+\end{center}
+
+\vspace{.5cm}
+\begin{flushright}
+\textit{D'après ressources de Florestan Mathurin}
+\end{flushright}
+%\begin{center}
+%\begin{tabular}{cccc}
+%\includegraphics[height=2.5cm]{images/acier} &
+%\includegraphics[height=2.5cm]{images/bois} &
+%\includegraphics[height=2.5cm]{images/composite} &
+%\includegraphics[height=2.5cm]{images/verre}\\
+%\textit{Acier \cite{acier}} & 
+%\textit{Bois} & 
+%\textit{Fibre de carbone \cite{composite}} & 
+%\textit{Verre \cite{verre}} \\
+%\end{tabular}
+%\end{center}
+
+
+
+\paragraph*{Coffre fort de banque}
+
+\setcounter{subparagraph}{0}
+
+
+On s'intéresse à un coffre fort de banque dont on donne le principe de fonctionnement.
+
+\vspace{.25cm} 
+
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/acces}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/fig3}
+\end{center}
+\end{minipage}
+
+\vspace{.25cm} 
+
+\subsection*{Extrait du cahier des charges}
+\begin{itemize}
+\item Seuls 4 responsables (notés $A$, $B$, $C$ et $D$) qui possèdent un ensemble code d'accès + clef à serrure peuvent avoir accès au coffre. Le responsable $A$ possède l'ensemble code d'accès et une clef notée $a$. Le responsable $B$ possède l'ensemble code d'accès et une clef notée $b$. Le responsable $C$ possède l'ensemble code d'accès et une clef notée $c$. Le responsable $D$ possède l'ensemble code d'accès et une clef notée $d$.
+\item Le responsable $A$ ne peut ouvrir le coffre qu'avec le responsable $B$ ou $C$.
+\item Les responsables $B$, $C$ et $D$ ne peuvent ouvrir le coffre qu'en présence d'au moins deux des autres responsables.
+\end{itemize}
+
+\subparagraph{}
+\textit{Donner le schéma des entrées -- sorties.}
+
+
+\subparagraph{}
+\textit{Construire la table de vérité contenant les entrées $a$, $b$, $c$ et $d$ ainsi que la sortie $S$ ($S=1$ : coffre ouvert $S=0$ coffre fermé) permettant de décrire le fonctionnement du système.}
+
+\subparagraph{}
+\textit{Donner l'équation logique non simplifiée du système du type $S=f(a,b,c,d)$.}
+
+\subparagraph{}
+\textit{Simplifier cette équation à l'aide de l'algèbre de Boole.}
+%
+%\subparagraph{}
+%\textit{Simplifier l'équation logique du système obtenue avant simplification en utilisant la table de Karnaugh.}
+
+\subparagraph{}
+\textit{Établir le logigramme relatif à la sortie $S$.}
+%
+%\subparagraph{}
+%\textit{Établir l'expression de $S$ qui permettra de réaliser un logigramme en n'utilisant que des portes NAND.}
+
+
+\subsection*{Exercice 2 -- Escalier mécanique avec contrôle d'accès}
+
+\begin{minipage}[c]{.45\linewidth}
+Afin d'assurer la sécurité et de contrôler le nombre de personnes qui rentrent dans un ambassade, on oblige ces personnes à emprunter un escalier mécanique avec contrôle d'accès qui mène à l'étage où se situent les bureaux.
+
+On s'intéresse au fonctionnement logique de ce système.
+% dont on donne le schéma de principe ainsi qu'un extrait du cahier des charges fonctionnel.
+
+
+\end{minipage}
+\hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/fig1}
+\end{center}
+\end{minipage}
+
+
+\subsubsection*{Extrait du cahier des charges}
+\setcounter{subparagraph}{0}
+\begin{itemize}
+\item Lorsqu'une personne franchi le portillon, elle pose un pied sur le tapis sensible bas ($T_b$) placé en bas de l'escalier. Aussitôt l'escalier se met en marche ($M$).
+\item Dès que la personne pose un pied sur l'escalier, tout en gardant l'autre sur le tapis sensible, sa présence est détectée par un capteur de présence ($c$). Dès que ce capteur ($c$) est activé, un verrou ($V$) bloque le portillon et l'escalier continue de marcher ($M$).
+\item Tout le temps que la personne reste dans l'escalier, le verrou ($V$) reste activé et l'escalier continue de marcher ($M$).
+\item Dès que la personne arrive en haut de l'escalier, elle pose le pied sur le tapis sensible haut ($T_h$) mais il faut qu'il quitte l'escalier ($c$) pour que celui-ci s'arrête de marcher. Le verrou ($V$) reste actif. 
+\item Lorsque la personne quitte le tapis sensible haut ($T_h$), le verrou ($V$) est désactivé. 
+\item Pour tout cas indésirable, toutes les actions doivent être désactivées.
+\end{itemize}
+
+On considère que $M=1$ quand l'escalier est en marche et que $V=1$ quand le verrou est activé. 
+
+\subparagraph{}
+\textit{Donner le schéma des entrées -- sorties du système.}
+
+\subparagraph{}
+\textit{Construire la table de vérité permettant de décrire le fonctionnement du système.}
+
+\subparagraph{}
+\textit{En déduire les équations logiques simplifiées du système.}
+
+\subparagraph{}
+\textit{Construire les logigrammes permettant de décrire le fonctionnement du système.}
+
+
+\end{document}
+
+\subsection*{Exercice 3 -- Feux de carrefour}
+On s'intéresse à une intersection entre une route principale et une route secondaire dont on donne le modèle ainsi qu'un extrait du cahier des charges fonctionnel.
+
+\setcounter{subparagraph}{0}
+
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/fig5}
+\end{center}
+
+Des capteurs de présence de voitures sont placés le long des voies : $a$ et $b$ pour la route principale, $c$ et $d$ pour la route secondaire. Les sorties de ces capteurs sont à A en présence de voitures. 
+
+Le cahier des charges fonctionnel de la fonction FS1 est le suivant : 
+\begin{itemize}
+\item le feu $F_1$ est vert quand il y a des voitures en $a$ et $b$ en même temps;
+\item le feu $F_1$ est vert quand simultanément il y a des voitures en $a$ ou $b$ et qu'il n'y a pas en $c$ ou pas en $d$;
+\item le feu $F_2$ est vert quand il y a des voitures en $c$ et $d$ et qu'il n'y en a pas en $a$ ou en $b$;
+\item le feu $F_2$ est vert quand il y a des voitures en $c$ et $d$ et qu'il n'y en a ni en $a$ ni en $b$;
+\item le feu $F_1$ est vert quand il n'y a pas de voiture du tout.
+\end{itemize}
+
+Un feu est à 1 lorsqu'il est vert.
+
+\subparagraph{}
+\textit{Déterminer l'expression de $F_1$ est de $F_2$ en sommant les conditions logiques exprimées dans les 5 points du cahier des charges.}
+
+\subparagraph{}
+\textit{Réaliser les tableaux de Karnaugh de $F_1$ et $F_2$.}
+
+\subparagraph{}
+\textit{Simplifier les expressions de $F_1$ et $F_2$ par les tableaux de Karnaugh.}
+
+\subparagraph{}
+\textit{Tracer les organigrammes de $F_1$ et $F_2$ correspondant aux expressions obtenues. }
+
+\subparagraph{}
+\textit{Déterminer par le calcul la valeur de $F_1$ ou $F_2$ (OU exclusif) et $F_1$ et $F_2$. Interpréter le résultat obtenu.}
+
+
+\end{document}

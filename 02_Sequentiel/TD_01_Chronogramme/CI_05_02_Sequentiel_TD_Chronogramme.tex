@@ -1,0 +1,239 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\usepackage[%
+    pdftitle={CI5 SN - Systèmes Séquentiels},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 2 -- Étude des systèmes séquentiels}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques\\
+Chapitre 2 -- Étude des systèmes séquentiels -- TD}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+2013 -- 2014 \\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+
+\begin{flushright}
+\textit{D'après ressources de David Prévost.}
+\end{flushright}
+
+\section{Doseur pondéral DPX}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_01}
+\end{center}
+On s'intéresse à un système de production de pièces en matières plastiques. La presse à injecter
+n’est pas l’objet de l’étude mais les fonctions à réaliser par cette presse sont évidemment liées
+aux fonctions du doseur pondéral qui est l’objet principal de cet exercice.
+La matière plastique « première » sous forme de différents granulés (produits principaux :
+macro produits et colorants : micro produits) est conservée dans des silos de grande taille. Le
+transport de ces matières vers les presses est réalisé automatiquement au moyen de
+canalisations et d’aspirateurs dans des trémies de stockage situées au-dessus d’un doseur
+pondéral qui permet le dosage et le mélange des granulés.
+
+Le doseur pondéral DPX produit un mélange dosé de matières premières par lot. Une quantité
+unitaire de mélange dosé s’appelle un « batch ». A l’ouverture de la trémie de pesée, un batch
+tombe dans la zone de malaxage du mélange. Cette zone de mélange alimente directement par
+gravité la presse à injecter (doseur au-dessus de l’entrée de la presse à injecter. Le procédé vise
+à obtenir un dosage précis des macro produits et micro produits en faisant en sorte que les
+masses de ces produits dans un batch soient conformes à la consigne.
+
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/fig_02}
+\end{center}
+
+Le doseur pondéral permet d’alimenter la trémie de pesée :
+\begin{itemize}
+\item en macro produit stocké dans la partie supérieure au moyen d’un godet de vidage;
+\item en micro produit stocké latéralement au moyen d’une vis d’Archimède.
+\end{itemize}
+
+La dose totale s’appelle un « batch ». Une fois le batch pesé il est vidé dans le mélangeur à hélice
+qui permet d’homogénéiser le produit qui chute par gravité dans le dispositif d’alimentation de
+la presse à injecter. Le capteur de niveau surveille la consommation de mélange par la presse et
+arrête le fonctionnement du DPX en cas de niveau trop élevé
+
+Le fonctionnement du doseur peut-être décrit par l’algorigramme suivant :
+
+\begin{center}
+\includegraphics[width=.75\textwidth]{images/fig_03}
+\end{center}
+
+\begin{hypo}
+On supposera dans la suite que le mélangeur n’est pas plein (capteur de
+niveau de mélange non activé).
+\end{hypo}
+
+\subparagraph{}
+\textit{Compléter le chronogramme donné sur le document réponse et en déduire le temps de
+cycle de réalisation d’un mélange avec le doseur pondéral DPX.}
+
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/fig_04}
+\end{center}
+
+\section*{Panne d'un hydro planeur}
+\setcounter{subparagraph}{0}
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_05}
+\end{center}
+Dans l'objectif d'optimiser le fonctionnement d'un hydro planeur il faut tenir compte de toutes
+les procédures de fonctionnement prévues, comme celle d'alerte en cas de panne de la
+transmission des données, qui impose d'émettre un signal de détresse permettant de venir
+repêcher l'hydro planeur.
+
+Dans ce cas de dysfonctionnement, l'hydro planeur adopte le comportement décrit par le
+diagramme d'état ci-dessous :
+
+\begin{center}
+\includegraphics[width=.85\textwidth]{images/fig_06}
+\end{center}
+
+\subparagraph{}
+\textit{Compléter les chronogrammes du document qui correspondent à la séquence des
+signaux de commande fournis par l’unité de traitement pour obtenir le fonctionnement
+souhaité dans le cas où la première et la deuxième transmission IRIDIUM échouent
+(lorsqu’un élément doit être activé, il sera représenté par un niveau haut).}
+
+
+
+\begin{center}
+\includegraphics[width=.75\textwidth]{images/fig_07}
+\end{center}
+
+\section*{Soufflerie équipant un tunnel souterrain}
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/fig_08}
+\end{center}
+
+\subsection*{Présentation}
+Afin de faciliter les déplacements des marchandises et des personnes sur Terre, l’usage de
+tunnels souterrains est de plus en plus fréquent. Ces tunnels doivent assurer la sécurité des
+personnes les empruntant, surtout s’il s’agit de tunnels autoroutiers où des véhicules
+consommant du carburant fossile les empruntent. Ces véhicules majoritairement constitués
+d’un moteur thermique consomment du pétrole (gazole, essence, …) et dégagent des gaz,
+notamment des oxydes d’Azote, du dioxyde de Soufre, du gaz $CO_2$, ainsi que bon nombre de
+particules dangereuses telles que le Plomb, …
+
+Afin d’assurer la sécurité des personnes dans les tunnels et de respecter la législation en vigueur
+sur ces ouvrages, il est nécessaire d’installer un système de ventilation permettant la circulation
+de l’air, et donc d’évacuer les gaz.
+
+On envisage dans cette étude de proposer un modèle de comportement de la commande de cette
+ventilation décrit par l’outil graphe d’états (diagramme état-transition). Un tunnel est équipé de
+3 ventilateurs indépendants et de 2 capteurs (un de température et un de gaz $CO_2$).
+
+La commande de chaque ventilateur (variables de sortie) est indépendante et sont notées
+$Fan1$, $Fan2$ et $Fan3$ et sont des variables binaires.
+
+Les 2 capteurs permettent d’acquérir l’état de l’air dans le tunnel :
+\begin{itemize}
+\item la variable associée au capteur de température est $temp$;
+\item la variable associée au capteur de gaz $CO_2$ est notée $CO2$.
+\end{itemize}
+
+Dans un premier temps, on souhaite décrire le comportement de la ventilation en accord avec le cahier
+des charges fonctionnel présenté ci-dessous.
+
+Le premier ventilateur $Fan1$ est toujours commandé afin de créer un léger flux d’air dans le
+tunnel. Le second ventilateur $Fan2$ est commandé (ventilateur $Fan3$ non commandé) lorsque la
+température dans le tunnel dépasse 20\textdegree C et qu’il n’y a pas de $CO_2$. Le troisième ventilateur $Fan3$
+est commandé (avec le ventilateur $Fan2$) lorsque que le capteur de gaz $CO_2$ indique une
+présence importante de gaz $CO_2$. Si la température est supérieure à 24\textdegree C et que le niveau de gaz
+$CO_2$ n’est pas trop important, la commande des ventilateurs 1 et 3 est réalisée (ventilateur Fan2
+non commandé).
+
+\subsection*{Travail demandé}
+Une étude préliminaire a permis de mettre en évidence la présence de 4 états sur le système de
+ventilation.
+
+\setcounter{subparagraph}{0}
+\subparagraph{}
+\textit{Listez ces 4 états en précisant pour chacun d’entre eux le ou les ventilateurs commandés.}
+
+On donne ci-dessous le graphe d’état permettant de décrire le fonctionnement séquentiel
+souhaité :
+
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_09}
+\end{center}
+
+L’objectif est dans un premier temps d’analyser ce graphe d’état, puis dans un second temps, de
+proposer une amélioration suite à une évolution du cahier des charges.
+
+\subparagraph{}
+\textit{Analyser les évolutions possibles du graphe d’état lors de la mise sous tension. Justifier la
+présence de la transition entre l’Etat1 (état source) et l’Etat3 (état destination).}
+
+\subparagraph{}
+\textit{En fonctionnement normal (en dehors de la mise sous tension), justifier le fait que la
+séquence Etat1 $\rightarrow$ Etat2 $\rightarrow$ Etat1 $\rightarrow$ Etat3 est impossible. Indiquer précisément la raison.}
+
+\subparagraph{}
+\textit{Compléter ci-dessous, le chronogramme en spécifiant l’état actif du diagramme état transition et l’état des ventilateurs. \`A l'instant $t=0$, l’état actif est l’Etat1.}
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/fig_10}
+\end{center}
+
+Dans un second temps, on souhaite faire évoluer le cahier des charges fonctionnel, tel que décrit
+ci-dessous.
+
+Extrait du nouveau cahier des charges fonctionnel :
+Le nouveau cahier des charges est en tout point identique au précédent, mais prend en compte
+la commande des 3 ventilateurs en cas d’incendie (variable binaire Feu).
+
+\subparagraph{}
+\textit{Décrire sur le graphe d’état précédent, et en rouge, le comportement de la ventilation
+respectant le nouveau cahier des charges. Vous prendrez soin de vérifier les propriétés de
+complétude et de non contradiction.}
+
+
+\end{document}
+
+

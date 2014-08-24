@@ -1,0 +1,781 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\usepackage[%
+    pdftitle={CI5 SED - Systèmes Logiques},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 1 -- Étude des systèmes combinatoires}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques -- Cours\\
+Chapitre 1 -- Étude des systèmes combinatoires}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+2013 -- 2014 \\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\includegraphics[width=.7\textwidth]{images/digicode}
+
+\textit{Digicode}
+\end{center}
+\end{minipage}\hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/transistor_ttl_nand}
+
+\textit{Transistor TTL (permettant de réaliser des opérations logiques) }
+\end{center}
+\end{minipage}\hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/inductif}
+
+\textit{Détecteur inductif}
+\end{center}
+\end{minipage}\hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/capteur_contact}
+
+\textit{Détecteur à contact}
+\end{center}
+\end{minipage}
+
+Un des objectifs de l'automaticien est de concevoir la partie commande qui traite les informations et élabore les ordres. Ce cours étudie le cas où les informations et les ordres élaborés sont des variables binaires.
+
+\begin{savoir}
+\textsc{Savoirs :}
+\begin{itemize}
+\item \textbf{Mod - C5.1 :} Modélisation des systèmes à événements discrets (fonctions logiques, tables de vérité).
+\end{itemize}
+\end{savoir}
+
+%\newpage 
+
+\setlength{\parskip}{0ex plus 0.2ex minus 0ex}
+ \renewcommand{\contentsname}{}
+ \renewcommand{\baselinestretch}{1}
+
+\tableofcontents
+
+ \renewcommand{\baselinestretch}{1.2}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+% \vspace{1cm}
+\textit{Ce document évolue. Merci de signaler toutes erreurs ou coquilles.}
+
+
+
+
+\section{Numération, codage, transcodage}
+\begin{rem}
+On considère acquis les notions de systèmes de numérations décimaux, binaires et hexadécimaux ainsi que le passage d'une base à l'autre.
+
+On considère aussi qu'il existe des notions sur la norme ASCII. 
+\end{rem}
+
+\subsection{Systèmes de codages utiles en technologie} 
+
+\subsubsection{Code binaire naturel}
+\begin{minipage}[c]{.65\linewidth}
+Ce code pondéré correspond à donner un nombre selon sa valeur en système de numérotation binaire. 
+
+C'est le seul code qui permet de réaliser des opérations. 
+
+Inconvénient : il introduit des erreurs lors d'un changement de code. Pour passer de $(01)_2$ à $(10)_2$, donc de 1 à2, il faut modifier chaque digit et afficher (même brièvement) $(11)_2$ (soit 3) ou $(00)_2$ (soit 0). Cela peut provoquer des perturbations ou des erreurs. 
+\end{minipage}\hfill
+\begin{minipage}[c]{.32\linewidth}
+\begin{center}
+\begin{tabular}{|c|c|c|c||c|}
+\hline
+\multicolumn{4}{|c||}{Entrée} & Sortie \\ \hline \hline
+0 & 0 & 0 & 0 & 0 \\ \hline 
+0 & 0 & 0 & 1 & 1 \\ \hline
+0 & 0 & 1 & 0 & 2 \\ \hline
+0 & 0 & 1 & 1 & 3 \\ \hline
+0 & 1 & 0 & 0 & 4 \\ \hline
+0 & 1 & 0 & 1 & 5 \\ \hline
+0 & 1 & 1 & 0 & 6 \\ \hline
+0 & 1 & 1 & 1 & 7 \\ \hline
+1 & 0 & 0 & 0 & 8 \\ \hline
+1 & 0 & 0 & 1 & 9 \\ \hline
+\end{tabular}
+\vspace{.25cm}
+
+\textit{Table de vérité du code binaire naturel}
+\end{center} 
+\end{minipage}
+
+\vspace{.25cm}
+
+\subsubsection{Code décimal codé binaire (DCB)}
+C'est un code pondéré base sur le code binaire naturel mais qui est adapté à la représentation des nombres en base 10. En effet le code binaire pur n'associe pas des bits spécifiques aux unités, dizaines, centaines, ... La propriété du code DCB est d'associer 4 bits différents à chaque puissance de 10. Ainsi, 
+$$
+(1664)_{10} \quad \Longrightarrow \quad  (0001.0110.0110.0100)_{DCB}
+$$
+
+Ce code est utilisé pour les afficheurs 7 segments. Chaque afficheur reçoit le chiffre codé en binaire sur 4 bits. 
+
+\begin{minipage}[c]{.6\linewidth}
+Inconvénient : Cette représentation adaptée à la représentation binaire des nombres décimaux utilise un nombre de bits supérieur à celui du binaire naturel, et donc une place plus important en mémoire de l'ordinateur. 
+\end{minipage} \hfill
+\begin{minipage}[c]{.25\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/fig_03}
+\end{center}
+\end{minipage}
+
+\begin{rem}
+On peut réaliser la même typologie pour le code hexadécimal. Notons ce codage HCB. Ainsi,
+$$
+(0C3F)_{16} \quad \Longrightarrow \quad (0000.1100.0011.1111)_{HCB}
+$$
+\end{rem}
+
+\subsubsection{Code  binaire réfléchi ou code Gray}
+\begin{minipage}[c]{.55\linewidth}
+Ce code non pondéré est un arrangement du système binaire. Le passage d'un nombre à l'autre se fait en changeant l'état d'un seul bit. Il est très utilisé pour décrire des automatismes (un changement d'état d'un composant correspond à un bit qui change), en particulier dans les codeurs de position absolue. 
+
+Avantage : il apporte une garantie d'interprétation avec une erreur maximale d'incrémentation. 
+
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[height=4cm]{images/DisqueGray} &
+\includegraphics[height=3.5cm]{images/CodeurGray} \\
+\textit{Disque codage Gray} & 
+\textit{Disque codage Gray} \\
+\end{tabular}
+
+
+
+\end{center}
+
+Pour obtenir le code Gray, il faut faire toutes les $2^1$, $2^2$, $2^3$ ... lignes, une symétrie en commençant par le bit de droite et changer la valeur du bit de gauche. 
+
+\end{minipage}\hfill
+\begin{minipage}[c]{.4\linewidth}
+\begin{center}
+\begin{tabular}{|c|cccc|cccc|}
+\hline
+Décimal & \multicolumn{4}{c|}{Binaire pur} &\multicolumn{4}{c|}{Binaire réfléchi} \\
+\hline
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 \\ \hline\hline
+2 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\ \hline
+3 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 \\ \hline\hline
+4 & 0 & 1 & 0 & 0 & 0 & 1 & 1 & 0 \\ \hline
+5 & 0 & 1 & 0 & 1 & 0 & 1 & 1 & 1 \\ \hline
+6 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 1 \\ \hline
+7 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 0 \\ \hline\hline
+8 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0 \\ \hline
+9 & 1 & 0 & 0 & 1 & 1 & 1 & 0 & 0 \\ \hline
+10 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 1 \\ \hline
+11 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 1 \\ \hline
+12 & 1 & 1 & 0 & 0 & 1 & 0 & 1 & 0 \\ \hline
+13 & 1 & 1 & 0 & 1 & 1 & 0 & 1 & 0 \\ \hline
+14 & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 1 \\ \hline
+15 & 1 & 1 & 1 & 1 & 1 & 0 & 0 & 0 \\ \hline
+\end{tabular}
+\end{center}
+\end{minipage}
+%\begin{exemple}
+%Écrire en code Gray le nombre 56.
+%\end{exemple}
+
+\subsection{Les codeurs optiques}
+\subsubsection{Le codeur incrémental}
+\begin{minipage}[c]{.75\linewidth}
+Un codeur incrémental est constitué d'un disque généralement muni de deux pistes ainsi que de trois couples de DEL -- récepteurs. Une des deux pistes est percée d'une seule fente. Le détecteur noté $Z$ permet de détecter le passage de cette fente. La seconde piste est composée de $n$ fentes. Les deux autres DEL ($A$ et $B$) détectent le passage des fentes sur cette piste. 
+
+Dans certains cas, les impulsions peuvent être mesurées par des capteurs à effets Hall. 
+
+Ces codeurs permettent de réaliser une mesure incrémentale. Il faut donc fixer une référence (POM -- Prise d'Origine Machine) pour connaitre la position absolue.
+
+Ces codeurs sont utilisés pour mesurer les déplacements des axes sur les machines outils. On en retrouve aussi sur l'axe asservi Emericc ou encore sur le Tribar.
+\end{minipage}\hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/CodeurIncremental}
+\end{center}
+\end{minipage}
+
+\begin{exemple}
+\begin{minipage}[c]{.75\linewidth}
+
+La résolution d'un codeur incrémental peut varier de 1 000 à 25 000 impulsions par tour pour des fréquences de rotation allant jusqu'à 10 000 tr/min.
+\begin{enumerate}
+\item Donner la résolution en degrés du codeur. 
+\item Quelle doit être la fréquence minimale du système d'acquisition afin de pouvoir gérer les informations provenant du codeur ?
+\item Réaliser le chronogramme des sorties des voies $A$ et $B$ en faisant l'hypothèse que les DEL $A$ et $B$ sont <<décalées>> d'un quart de période.
+\item Expliquer en quoi l'existence des deux LED permet de détecter le sens de rotation du disque. 
+\end{enumerate}
+\end{minipage}\hfill
+\begin{minipage}[c]{.2\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/DisqueIncremental}
+\end{center}
+\end{minipage}
+
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/ChronogrammeIncremental}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/ChronogrammeIncremental}
+\end{center}
+\end{minipage}
+\end{exemple}
+
+
+
+\subsubsection{Le codeur absolu}
+
+Un codeur absolu permet de déterminer la position angulaire réel d'un système. Il est constitué de $N$ pistes avec des fentes qui sont agencées selon le codage Gray. Une <<rampe>> de $N$ couples de DEL -- récepteurs permettent de détecter, à un instant donné une combinaison de bits correspondant à la position du disque. 
+
+\begin{exemple}
+\begin{enumerate}
+\item Combien de pistes faut-il pour coder $360 \textdegree$ avec une précision de $0,1 \textdegree$. 
+\item Combien faudrait-il de fentes avec codeur incrémental ? 
+\item Pour un codeur avec 3 pistes, teinter les différentes zones dans le cas d'un codage Gray puis dans le cas d'un codeur naturel.
+\item Conclure sur l'intérêt du code Gray lorsque les DEL sont décalées. 
+\end{enumerate}
+
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/DisqueAbsolu}
+
+\textit{Codage binaire naturel}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/DisqueAbsolu}
+
+\textit{Codage binaire réfléchi}
+\end{center}
+\end{minipage}
+
+
+\end{exemple}
+
+\section{Systèmes combinatoires}
+%
+%\begin{exemple}
+%Support : éclairage d'un escalier
+%
+%On souhaite éclairer un escalier par 4 lampes qui s'allument automatiquement lorsque l'on monte ou descend l'escalier. Pour l'esthétisme, on désire que les lampes s'allument puis s'éteignent successivement lorsqu'une présence est détectée. On utilise 3 détecteurs de présence notés $a$, $b$, et $c$. L'objectif est de déterminer les équations logiques liant l'état des lampes à l'état des détecteurs de présence. Chaque capteur détecte une présence. Chaque capteur détecte une présence dans la zone indiquée. Il faut toujours 2 lampes allumées sauf aux marches extrêmes. 
+%\end{exemple}
+%
+%
+%\begin{center}
+%\includegraphics[width=.9\textwidth]{images/fig_06}
+%\end{center}
+
+
+\subsection{Définitions}
+\subsubsection{Variables binaires}
+De nombreux composants utilisés en automatisme ne peuvent normalement prendre que deux états différents : lampe allumée ou éteinte, bouton-poussoir actionné ou relâché, moteur tournant ou à l'arrêt, vérin pneumatique sorti ou rentré. 
+
+
+A chacun de ces composants, on peut associer une variable binaire (ou logique, Tout Ou Rien) qui ne peut prendre que deux valeurs notées 0 ou 1 (vrai ou faux, oui ou non). 
+
+\begin{defi}
+Une variable $a$ est binaire si et seulement si elle peut prendre, à chaque instant, qu'une seule valeur parmi un ensemble de 2 valeurs possibles. 
+\end{defi}
+
+\begin{exemple}
+\textit{Lister les variables binaires pour un codeur incrémental avec une résolution de 0,1 degrés et pour un codeur absolu de même résolution.}
+\end{exemple}
+
+
+\begin{rem}
+\begin{minipage}[c]{.6\linewidth}
+Le comportement tout ou rien (TOR) ne correspond qu'au comportement normalement prévu en régime stabilisé et en l'absence de tout dysfonctionnement. 
+
+L'association d'une variable binaire à un composant ne peut pas rendre compte des états transitoires apparaissent entre deux états stables. C'est donc une simplification du comportement réel.
+\end{minipage}\hfill
+\begin{minipage}[c]{.35\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/fig_07_2}
+\end{center}
+\end{minipage}
+\end{rem}
+
+
+
+\subsubsection{Système binaire}
+
+\begin{defi}
+Un système est dit binaire ou logique si les variables d'entrée et de sortie sont binaires. 
+\end{defi}
+
+\subsubsection{Systèmes combinatoire et séquentiel}
+\begin{defi}
+Un système logique combinatoire est un système binaire pour lequel à un état des variables d'entrée $E_i$ correspond un unique état des variables de sortie $S_j$. (La réciproque n'est pas vraie.)
+\end{defi}
+
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/fig_08}
+\end{center}
+
+\begin{defi}
+Un système logique est dit séquentiel si les sorties $S_j$ ne dépendent pas uniquement des $E_i$.
+\end{defi}
+
+\begin{exemple}
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/fig_09}
+\end{center}
+
+\end{exemple}
+
+
+\subsection{Algèbre de Boole}
+
+La fonction logique qui caractérise le système est indépendante du temps. Pour traiter de tels systèmes, on utilise l'algèbre de Boole. 
+
+\subsubsection{Définition}
+C'est un algèbre de propositions logiques mise au point par un mathématicien anglais, Georges Boole (1815 -- 1864).
+
+\begin{defi}
+Un ensemble $E$ a une structure d'algèbre Boole si on a défini dans cet ensemble :
+\begin{itemize}
+\item une relation d'équivalence notée $=$;
+\item deux lois de composition interne $+$ (addition booléenne) et $\cdot$ (multiplication booléenne);
+\item une loi appelée complémentation ($\overline{a}$ complément de $a$).
+\end{itemize}
+\end{defi}
+
+Une algèbre binaire est une algèbre de Boole dont les éléments $B$ ne peuvent prendre que deux valeurs notées 0 ou 1 : $B=\{0,1 \}$. 
+
+\begin{exemple}
+Fonction OUI.
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/oui}
+\end{center}
+\end{exemple}
+
+
+\subsubsection{Fonction NON -- appelée complément}
+\begin{defi}
+\textbf{Fonction NON -- appelée complément}
+
+\begin{minipage}[c]{.45\linewidth}
+\begin{eqnarray*}
+B &\longmapsto& B\\
+a &\longmapsto& \overline{a}
+\end{eqnarray*}
+Il faut lire $\overline{a}$ : NON a.
+\end{minipage} \hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\begin{tabular}{|c||c|}
+\hline
+$a$ & $\overline{a}$ \\
+\hline
+0 & 1 \\
+\hline
+1 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}
+\end{defi}
+
+\begin{exemple}
+Fonction NON.
+
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/NON}
+\end{center}
+
+\end{exemple}
+
+
+\subsubsection{Fonction ET -- Produit booléen}
+
+\begin{defi}
+\textbf{Fonction ET -- Produit booléen}
+
+\begin{minipage}[c]{.45\linewidth}
+\begin{eqnarray*}
+B \times B &\longmapsto& B\\
+(a,b) &\longmapsto& a \cdot b
+\end{eqnarray*}
+Il faut lire $a$ ET $b$. 
+\end{minipage} \hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\begin{tabular}{|c|c||c|}
+\hline
+$a$ & $b$ & $a\cdot b$ \\
+\hline
+0 & 0 & 0 \\ \hline
+0 & 1 & 0 \\ \hline
+1 & 0 & 0 \\ \hline
+1 & 1 & 1 \\ \hline
+\end{tabular}
+\end{center}
+\end{minipage}
+\end{defi}
+
+\begin{exemple}
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/ET}
+\end{center}
+
+\end{exemple}
+
+
+\subsubsection{Fonction OU -- Somme booléenne}
+
+
+\begin{defi}
+\textbf{Fonction OU -- Somme booléenne}
+
+\begin{minipage}[c]{.45\linewidth}
+\begin{eqnarray*}
+B \times B &\longmapsto& B\\
+(a,b) &\longmapsto& a + b
+\end{eqnarray*}
+Il faut lire $a$ OU $b$. 
+\end{minipage} \hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\begin{tabular}{|c|c||c|}
+\hline
+$a$ & $b$ & $a+ b$ \\
+\hline
+0 & 0 & 0 \\ \hline
+0 & 1 & 1 \\ \hline
+1 & 0 & 1 \\ \hline
+1 & 1 & 1 \\ \hline
+\end{tabular}
+\end{center}
+\end{minipage}
+\end{defi}
+
+\begin{exemple}
+Fonction OU.
+
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/OU}
+\end{center}
+\end{exemple}
+
+\subsubsection{Propriétés des opérateurs de base de l'algèbre de Boole}
+
+\begin{prop}
+\textbf{Commutativité}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a+b = b+a$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a\cdot b = b\cdot a$$
+\end{minipage}
+
+\textbf{Distributivité}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a\cdot (b+c) = a\cdot b+a \cdot c$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a+(b\cdot c) = (a+b) \cdot (a+c)$$
+\end{minipage}
+
+\textbf{Associativité}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a + (b+c) = (a+b)+c = a+b+c$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a \cdot (b\cdot c) = (a\cdot b)\cdot c = a \cdot b\cdot c$$
+\end{minipage}
+
+\textbf{Élément neutre}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a + 0 = a$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a\cdot 1 = a$$
+\end{minipage}
+
+\textbf{Élément absorbant}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a + 1 = 1$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a\cdot 0 = 0$$
+\end{minipage}
+
+\textbf{Complémentarité}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a + \overline{a} = 1$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a\cdot \overline{a} = 0$$
+\end{minipage}
+
+Par ailleurs $\overline{\overline{a}}=a$.
+
+\textbf{Idem potence}
+
+\begin{minipage}[c]{.45\linewidth}
+$$ a + a = a$$
+\end{minipage}\hfill
+\begin{minipage}[c]{.45\linewidth}
+$$ a\cdot a = a$$
+\end{minipage}
+
+\textbf{Identités remarquables}
+
+Absorption : 
+$$ a + a\cdot b = a$$
+
+Inclusion :
+$$
+a+\overline{a}\cdot b = a+b
+$$
+\end{prop}
+
+\subsubsection{Théorème de Morgan}
+\begin{theo}
+$$
+\overline{\sum\limits_{i=1}^{n} a_i} = \prod\limits_{i=1}^n \overline{a_i}
+\quad
+\overline{\prod\limits_{i=1}^{n} a_i} = \sum\limits_{i=1}^n \overline{a_i}
+$$
+\end{theo}
+
+\begin{exemple}
+Déterminer les expressions complémentaires $\overline{P}$ et $\overline{Q}$ des expressions suivantes : 
+$P = x\cdot y \cdot (z + \overline{t})$ et $Q=\overline{x}\cdot\overline{y} + y + x\cdot t$.
+\end{exemple}
+
+\section{Fonctions logiques}
+
+Un système combinatoire est décrit par une fonction logique qui permet de définir de manière unique la sortie pour une combinaison des entrées. 
+
+\subsection{Table de vérité}
+La table de vérité d'une fonction logique est une écriture systématique qui consiste à décrire toutes les combinaison des variables et à y associer les valeurs correspondantes de la fonction. 
+
+\begin{exemple}
+
+
+Compléter la table de vérité suivante et vérifier les théorèmes de De Morgan pour deux variables.
+\begin{center}
+\begin{tabular}[c]{|c|c||c|c|c|c|}
+\hline
+$a$ & $b$ & $\overline{a\cdot b}$ & $\overline{a} + \overline{b}$ & $\overline{a+b}$ & $\overline{a}\cdot\overline{b}$ \\
+\hline \hline 
+0 & 0 & & & & \\ \hline
+0 & 1 & & & & \\ \hline
+1 & 1 & & & & \\ \hline
+1 & 1 & & & & \\ \hline
+\end{tabular}
+\end{center}
+
+\end{exemple}
+
+\begin{exemple}
+Soit 4 lampes $L_1$, $L_2$, $L_3$, $L_4$ permettant d'éclairer un escalier. L'allumage de ces 3 lampes est régit par 3 détecteurs de présences $a$, $b$ et $c$. La table de vérité est la suivante :
+
+\begin{minipage}[c]{.4\linewidth}
+\begin{center}
+\begin{tabular}[c]{|c|c|c||c|c|c|c|}
+\hline 
+$a$ & $b$ & $c$ & $L_1$ & $L_2$ & $L_3$ & $L_4$ \\
+\hline \hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 & 0 & 1 \\ \hline
+0 & 1 & 1 & 0 & 0 & 1 & 1 \\ \hline
+0 & 1 & 0 & 0 & 1 & 1 & 0 \\ \hline
+1 & 1 & 0 & 1 & 1 & 0 & 0 \\ \hline
+1 & 1 & 1 & 1 & 1 & 1 & 1 \\ \hline
+1 & 0 & 1 & 1 & 0 & 0 & 1 \\ \hline
+1 & 0 & 0 & 1 & 0 & 0 & 0 \\ \hline 
+\end{tabular}
+\end{center}
+\end{minipage}
+\begin{minipage}[c]{.55\linewidth}
+\begin{center}
+\includegraphics[width=\textwidth]{images/fig_06}
+\end{center}
+\end{minipage}
+
+Donner l'expression de $L_1$, $L_2$, $L_3$, $L_4$.
+\end{exemple}
+
+Il est possible à l'aide de la table de vérité de définir une équation donnant les variables de sortie en fonction des variables d'entrée. Il existe 2 modes d'écriture particuliers : 
+\begin{itemize}
+\item somme canonique (somme de produit) : $S=a\cdot b + c\cdot d$;
+\item produit canonique (produit de sommes) : $S=(a+b) \cdot (c+d)$.
+\end{itemize}
+
+\begin{methode}
+\textbf{Détermination de la somme canonique}
+
+Pour chaque ligne où la sortie vaut 1, déterminer la combinaison d'entrées correspondante à l'aide de l'opérateur ET puis sommer ces combinaisons. 
+\end{methode}
+
+
+\begin{exemple}
+Donner l'expression sous forme canonique de $L_1$ et $L_2$ à partir de la table de vérité précédente. 
+\end{exemple}
+
+\begin{rem}
+On utilise la forme de sommes canoniques si le nombre de 1 est inférieur au nombre de 0. Il est souvent nécessaire de simplifier ces équations pour réaliser technologiquement ces fonctions (voir plus loin).
+\end{rem}
+
+\begin{methode}
+\textbf{Détermination du produit canonique}
+
+Déterminer l'expression de $\overline{S}$ ce qui revient à :
+Déterminer la combinaison d'entrées pour chaque ligne où la sortie vaut 0, les sommer, puis passez au complémentaire en utilisant les théorèmes de De Morgan. 
+\end{methode}
+
+\begin{exemple}
+Donner l'expression sous forme de produit canonique de $L_1$ et $L_2$.
+\end{exemple}
+
+\begin{rem}
+Cette méthode est utile lorsque la sortie comporte peu de 0 et beaucoup de 1 ou lorsque l'on recherche la fonction complémentaire. 
+\end{rem}
+
+\section{Simplification des fonctions logiques}
+La simplification des expressions logiques est destinée à économiser le matériel nécessaire à la réalisation (utilisation d'un composant réalisant plusieurs fonctions identiques) ou diminuer l'importance des équations programmées.
+
+\subsection{Cellules universelles}
+\begin{defi}
+
+Une cellule (ou fonction) est dite "universelle" si elle permet de réaliser les fonctions ET, OU, NON. Il est alors possible de réaliser toutes les fonctions logiques à l'aide de cette seule cellule. 
+\end{defi}
+
+\begin{exemple}
+Les cellules NAND (non et -- $a NAND b = \overline{a\cdot b}$) et NOR (non ou -- $a NOR b = \overline{a + b}$) sont des cellules universelles. 
+
+Réalisation de la fonction NON : $ NON(a) = \overline{a} = \overline{a\cdot a}$. Besoin d'une seule cellule NAND. 
+ 
+Réalisation de la fonction ET : $ a ET b = a\cdot b= \overline{\overline{a\cdot b}} $. Besoin de deux cellules NAND en cascade. 
+
+Réalisation de la fonction OU : $ a OU b = a+ b= \overline{\overline{a+b}}= \overline{\overline{a}\cdot\overline{b}} $. Besoin de trois cellules NAND en cascade. 
+
+De même, la cellule NOR est universelle.
+\end{exemple}
+
+\begin{exemple}
+Écrire l'expression logique suivante uniquement avec des opérateurs NAND puis indiquer le nombre minimal d'opérateurs utilisés.
+$$
+F=c\cdot (\overline{a}+\overline{b})
+$$
+\end{exemple}
+
+\subsection{Simplification algébrique d'une fonction}
+Il s'agit d'utiliser les propriétés, théorèmes et identités remarquables de l'algèbre de Boole afin de simplifier une équation. Cette méthode n'est pas forcément simple à utiliser et demande beaucoup d'intuition.
+
+\begin{exemple}
+$$F(a,b,c) = \overline{a}\cdot \overline{b} \cdot c + a \cdot \overline{b} \cdot c + \overline{a}\cdot b \cdot c = \overline{a}\cdot c \cdot (\overline{b}+b) + a\cdot \overline{b}\cdot c = \overline{a}\cdot c + a\cdot \overline{b}\cdot c = c(\overline{a}+a\cdot \overline{b}) = c\left(\overline{a}(1+\overline{b}) + a \cdot \overline{b}\right) = c\cdot (\overline{a}+\overline{b})$$
+\end{exemple}
+
+\begin{exemple}
+Simplifier par cette méthode l'expression des lampes $L_1$ et $L_2$. 
+\end{exemple}
+
+
+
+
+\section{Représentation des fonctions logiques}
+Dans un système combinatoire : 
+\begin{itemize}
+\item les variables d'entrée sont des informations qui décrivent à un moment donnée l'état de certaines parties (position d'un chariot, d'un outil, ...)
+\item les variables de sortie permettent de décrire l'état dans lequel doivent se retrouver les organes récepteurs. 
+\end{itemize}
+
+Une fois l'expression logique obtenue et simplifiée, il est possible d'exprimer graphiquement le comportement du système combinatoire. On utilise pour cela en général le logigramme ou le schéma électrique. On peut également utiliser un schéma pneumatique ou électronique.
+
+
+%Un logigramme est une représentation logique 
+
+
+\begin{center}
+\includegraphics[width=.6\textwidth]{images/fig_17}
+\end{center}
+
+
+\subsection{Logigrammes pour un codeur incrémental}
+\begin{exemple}
+\begin{enumerate}
+\item Réaliser le logigramme illustrant le comptage et le décomptage des impulsions provenant d'un codeur incrémental.
+\item Réaliser le logigramme illustrant le comptage et le décomptage des impulsions provenant d'un codeur incrémental en multipliant par 4 sa résolution.
+\end{enumerate}
+
+\begin{rem}
+On appelera front montant de $a$ et notera $\uparrow a$  le passage de la variable $a$ de l'état 0 à l'état 1.
+\end{rem}
+
+\end{exemple}
+
+\begin{thebibliography}{2}
+\bibitem{dv}{Supports de cours de David Violeau, Lycée Saint-Louis, Paris.}
+\bibitem{fm}{Supports de cours de Florestan Mathurin, Lycée Bellevue, Toulouse.}
+%\bibitem{jpp}{Supports de cours de Jean-Pierre Pupier, Lycée Rouvière, Toulon}
+
+\end{thebibliography}
+
+\end{document}\end{document}
+
+

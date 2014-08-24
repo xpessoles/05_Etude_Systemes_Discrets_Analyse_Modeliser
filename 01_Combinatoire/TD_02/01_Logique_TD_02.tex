@@ -1,0 +1,162 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\newboolean{td}
+\setboolean{td}{true}
+
+
+\usepackage[%
+    pdftitle={CI5 SED - Systèmes Logiques},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 1 -- Étude des systèmes logiques (appelés aussi combinatoires)}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques -- TD\\
+Chapitre 1 -- Étude des systèmes logiques}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+2013 -- 2014 \\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+\begin{center}
+\large{\textsc{Travaux Dirigés}}
+\end{center}
+
+\vspace{.5cm}
+\begin{flushright}
+\textit{D'après ressources de Stéphane Genouël.}
+\end{flushright}
+%\begin{center}
+%\begin{tabular}{cccc}
+%\includegraphics[height=2.5cm]{images/acier} &
+%\includegraphics[height=2.5cm]{images/bois} &
+%\includegraphics[height=2.5cm]{images/composite} &
+%\includegraphics[height=2.5cm]{images/verre}\\
+%\textit{Acier \cite{acier}} & 
+%\textit{Bois} & 
+%\textit{Fibre de carbone \cite{composite}} & 
+%\textit{Verre \cite{verre}} \\
+%\end{tabular}
+%\end{center}
+
+
+
+\subsection*{Tableau de classe}
+\setcounter{subparagraph}{0}
+
+\begin{minipage}[c]{.7\linewidth}
+On désire installer un tableau à double commande électrique dans une salle de classe. Le dispositif est représenté ci-contre.
+
+Un moto-réducteur (MR) commande une vis sans fin actionnent le tambour sur lequel un câble s'enroule. Le câble est lié au tableau avant (av) et au tableau arrière (ar). Le moteur est commande par un contacteur marche-avant (CH) pour le sens H et un contacteur marche-arrière (CB) pour le sens B. 
+
+Le tableau avant se déplace vers le le haut, lorsque le moteur tourne dans le sens H. Le tableau avant se déplace vers le bas, lorsque le moteur tourne dans le sens B. 
+
+Le bouton (m) permet la montée du tableau avant, tant qu'il est appuyé. Si on relâche (m) le tableau s'arrête. 
+Le bouton (d) assure la descente du tableau avant, tant qu'il est appuyé. Si on relâche (d) le tableau s'arrête. 
+
+Condition supplémentaire : l'action simultanée sur (m) et (d) provoque l'arrêt du moteur qui ne se remet en marche que lorsque l'un des deux boutons est libéré et dans le sens prescrit par celui qui reste appuyé.
+\end{minipage} \hfill
+\begin{minipage}[c]{.25\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/fig_01}
+\end{center}
+\end{minipage}
+\subparagraph{}
+\textit{Donner le schéma des entrées -- sorties de la partie commande.}
+
+\subparagraph{}
+\textit{Donner la table de vérité permettant de décrire le fonctionnement du système.}
+
+\subparagraph{}
+\textit{En déduire les équations logiques, puis les schémas à contacts, et enfin les logigrammes permettant de décrire le fonctionnement du système.}
+
+\subparagraph{}
+\textit{Donner le schéma du câblage :
+\begin{itemize}
+\item du circuit de commande (alimentation électrique continue 24V).
+\end{itemize}}
+
+
+\subsection*{Remplissage automatique d'un réservoir}
+\setcounter{subparagraph}{0}
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/fig_02}
+\end{center}
+
+
+Le système est composé de : 
+\begin{itemize}
+\item un vérin simple effet (1C) (matérialisant la vanne);
+\item un distributeur 3/2 monostable (1D) à commande pneumatique;
+\item un capteur 3/2 monostable (b) pour déceler le niveau bas (capteur actionné = niveau détecté);
+\item un capteur 3/2 monostable (h) pour déceler le niveau haut (capteur actionné = niveau détecté);
+\item un bouton poussoir 3/2 monostable normalement ouvert (m) pour le remplissage manuel.
+\end{itemize}
+
+
+La vanne d'alimentation en eau s'ouvre lorsque le niveau bas est détecté ou par action sur le bouton m. La vanne se ferme lorsque le niveau haut est atteint. Elle ne peut en aucun cas s'ouvrir si ce niveau est détecté.
+
+\subparagraph{}
+\textit{Donner le schéma des entrées--sorties de la partie commande.}
+
+\subparagraph{}
+\textit{Donner la table de vérité permettant de décrire le fonctionnement du système.}
+
+\subparagraph{}
+\textit{En déduire l'équation logique simplifiée, puis le schéma à contacts, et enfin le logigramme permettant de décrire le fonctionnement du système.}
+
+\subparagraph{}
+\textit{Compléter le schéma de câblage : 
+\begin{itemize}
+\item du circuit de commande (alimentation pneumatique à 3 bar) en bleu;
+\item du circuit de commande (alimentation pneumatique à 6 bar) en rouge.
+\end{itemize}}
+
+
+
+
+
+
+
+\end{document}

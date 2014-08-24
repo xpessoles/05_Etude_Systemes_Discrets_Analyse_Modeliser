@@ -1,0 +1,274 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\usepackage[%
+    pdftitle={CI5 SN - Systèmes Séquentiels},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 2 -- Étude des systèmes séquentiels}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques\\
+Chapitre 2 -- Étude des systèmes séquentiels -- TD}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+2013 -- 2014 \\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+
+\begin{flushright}
+\textit{D'après ressources de David Prévost.}
+\end{flushright}
+
+\section{Poste de dégraissage d’une machine de traitement de surface}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_01}
+\end{center}
+On s'intéresse à un poste de dégraissage d’une machine de dégraissage dont on donne une
+description matérielle ainsi qu’un extrait de cahier des charges ci-dessous.
+
+Le poste de dégraissage est utilisé pour décaper des pièces avant un traitement de surface. Il se
+compose d’une zone de chargement, d’une zone de déchargement, d’une cuve de dégraissage et
+d’un chariot automoteur se déplaçant sur un rail. Ce chariot permet de déplacer un panier
+contenant les pièces à traiter.
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_02}
+\end{center}
+
+Extrait du cahier des charges :
+\begin{itemize}
+\item Le chargement et le déchargement du panier se fait manuellement en position basse.
+\item La consigne de départ de cycle et l’information de fin de déchargement sont données
+manuellement par l’opérateur.
+\item Le chariot ne peut se déplacer que lorsque le panier est en position haute. Un voyant doit
+s’allumer lorsque le chariot se déplace.
+\item Les pièces doivent rester 30 secondes dans le banc de dégraissage.
+\item Le cycle ne peut démarrer que si le chariot est à gauche et le panier en position basse.
+\item Lorsque l’opération de déchargement est terminée, le chariot revient en position initiale.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_03}
+\end{center}
+
+Données : 
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_04}
+\end{center}
+
+
+\subparagraph{}
+\textit{A partir des tableaux ci-dessus, identifier les entrées sorties du poste de dégraissage.}
+
+\subparagraph{}
+\textit{Continuer le diagramme d’états du Document Réponse en utilisant les spécificités
+technologiques de ce système en proposant une description sans puis avec états
+composites.}
+
+\subparagraph{}
+\textit{Pour tous les états, préciser comment sont activées ou désactivées les sorties, selon le
+mode de représentation choisi (sans et avec état composite).}
+
+
+On souhaite améliorer la partie commande en ajoutant une fonctionnalité. Si l’opérateur donne
+comme consigne « départ cycle sans trempage dcyst » au lieu de « départ cycle dcy », les pièces
+doivent être envoyées directement au poste de déchargement sans passer par le poste de
+dégraissage.
+
+\subparagraph{}
+\textit{Rajouter dans le diagramme d’état, les directives supplémentaires du cahier des charges
+décrites ci-dessus.}
+
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/fig_05}
+\end{center}
+
+\newpage
+
+\section*{Unité de transfert de mise en pot}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_06}
+\end{center}
+\setcounter{subparagraph}{0}
+
+On s'intéresse à une unité de transfert rotatif destinée à la mise en pot alimentaire dont on
+donne une description matérielle ainsi qu’un extrait du cahier des charges fonctionnel.
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_07}
+\end{center}
+
+Extrait du cahier des charges : 
+\begin{itemize}
+\item Les pots à remplir arrivent du poste de lavage par le tapis d’amenage.
+\item Si le mode automatique est enclenché, les 3 taches (remplir, boucher et imprimer) doivent
+être effectuées simultanément.
+\item Dès que les 3 taches sont terminées, les pots doivent être transférés d’un poste à l’autre
+(remplissage → bouchage → impression) par un disque de distribution motorisé par un
+motoréducteur.
+\item La position du disque doit être détectée par une cellule photo électrique. Le disque est en
+position lorsqu’un trou est en face du détecteur.
+\item La position du disque doit être maintenue par un vérin pneumatique indexeur.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_08}
+\end{center}
+
+Entrée/Sorties du système :
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_09}
+\end{center}
+
+\subparagraph{}
+\textit{Établir le diagramme d’état de cette unité de transfert de mise en pot à partir des
+données du C.d.C.F.}
+
+\subparagraph{}
+\textit{Ajouter sur le diagramme d’états la gestion d’un arrêt d’urgence : lorsque l’arrêt d’urgence
+(ARU) est enclenché, tous les états sont désactivés ; lors du réarmement (fin de l’arrêt
+d’urgence), le cycle reprendra là où il s’était arrêté.}
+
+\newpage 
+
+\section*{Poste de compression de cartouches de chasse}
+\begin{flushright}
+\textit{D'après Patrick Beynet et Al., Les Sciences Industrielles de l'Ingénieur en PCSI -- MPSI, Éditions Ellipses.}
+\end{flushright}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_10}
+\end{center}
+\setcounter{subparagraph}{0}
+
+\subsection*{Mise en situation et description du cycle de fonctionnement}
+
+On s’intéresse à un cycle de fonctionnement à deux vérins caractérisant le comportement d’un
+poste de compression de cartouches de chasse. Le système étudié doit permettre par
+l’intermédiaire de deux vérins, les opérations de maintien et de compression d’une cartouche de
+chasse.
+
+L’opération de compression consiste à enfoncer une bourre dans le fond de la cartouche audessus
+de la poudre. Les bourres d’une part et les cartouches d’autre part sont amenées par un
+système de transfert dont cette étude ne fait pas l’objet.
+
+Cycle de fonctionnement :
+Dès que le départ cycle est donné, le vérin de maintien vient plaquer la cartouche contre un
+appui afin de la maintenir. Le vérin de compression enfonce alors les bourres dans le fond de
+l’étui de la cartouche. Il se retire et simultanément, le vérin de maintien libère la cartouche afin
+qu’elle soit évacuée.
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_11}
+\end{center}
+
+On utilise (voir figure ci-dessus) :
+\begin{itemize}
+\item un bouton poussoir de départ cycle « dcy »;
+\item un vérin simple effet comme vérin de maintien (pré-actionneur monostable : ordre de sortie
+« VM »), et détecteurs fin de course « $vm_0$ » (tige rentrée) et « $vm_1$ » (tige sortie) ;
+\item un vérin simple effet comme vérin de compression (préactionneur monostable : ordre de
+sortie « VC »), et détecteurs fin de course « $vc_0$ » (tige rentrée) et « $vc_1$ » (tige sortie).
+\end{itemize}
+
+\subsection*{Travail demandé}
+\subparagraph{}
+\textit{Compléter ci-dessous le chronogramme décrivant un cycle de fonctionnement normal. Le
+système est-il séquentiel ou combinatoire ?}
+
+
+\begin{center}
+\includegraphics[width=.3\textwidth]{images/fig_12}
+\end{center}
+
+\subparagraph{}
+\textit{Recopier et compléter le diagramme d’états du système ci-dessous.}
+
+
+\begin{center}
+\includegraphics[width=.75\textwidth]{images/fig_13}
+\end{center}
+
+\subparagraph{}
+\textit{Proposer un diagramme d’états de l’état composite « maintien et compression ». On pourra utiliser deux états disjoints pour lesquels on précisera l’activité.}
+
+\section*{Château d'eau}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_14}
+\end{center}
+\setcounter{subparagraph}{0}
+
+Un château d’eau est alimenté par trois pompes P1, P2 et P3 en fonction de l’état des trois
+détecteurs de niveau h1, h2 et h3. Un détecteur de niveau est à l’état 1 s’il est noyé.
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/fig_15}
+\end{center}
+
+
+Cahier des charges 1 :
+Un interrupteur m permet de mettre en fonctionnement l’installation.
+La pompe Pi est en fonctionnement si l’interrupteur m est actionné et si le détecteur de niveau hi
+n’est pas noyé.
+
+\subparagraph{}
+\textit{Établir le diagramme d’état décrivant le fonctionnement de ce premier cahier des
+charges.}
+
+Cahier des charges n°2 :
+
+Le fonctionnement, décrit précédemment, fait apparaître une utilisation excessive de la pompe
+P3 ce qui provoque son échauffement et diminue sa durée de vie. Pour éviter ces inconvénients,
+on décide d’effectuer une permutation circulaire de l’utilisation des pompes, à chaque front
+montant de h3 ou de l’interrupteur m.
+
+\subparagraph{}
+\textit{Établir le diagramme d’état décrivant le fonctionnement de ce deuxième cahier des
+charges.}
+
+
+\end{document}
+
+
