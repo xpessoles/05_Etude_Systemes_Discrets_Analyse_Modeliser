@@ -1,0 +1,338 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+\newboolean{xp}
+\setboolean{xp}{true}
+
+\newboolean{prof}
+\setboolean{prof}{true}
+
+\usepackage[%
+    pdftitle={CI5 SN - Réseaux},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques}{
+Chapitre  -- }}
+
+\def\xxsoustitre{\ifthenelse{\boolean{xp}}{
+Chapitre 3 -- Réseaux}{
+Partie  -- }}
+
+\def\xxauteur{\ifthenelse{\boolean{xp}}{
+Xavier \textsc{Pessoles} \\ 2013 -- 2014}{
+}}
+
+\def\xxpied{\ifthenelse{\boolean{xp}}{
+CI 5 : Étude du comportement des systèmes numériques -- Cours\\
+Chapitre 3 -- Réseaux}{
+\xxtitre}}
+
+\def\xxcathegorie{\ifthenelse{\boolean{xp}}{
+Laurent Deschamps \& Patrick Beynet\\
+Xavier \textsc{Pessoles}}{}}
+
+
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+
+\ifthenelse{\boolean{xp}}{\input{style/enteteXP}}{\input{style/enteteDI}}
+
+
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=.7\textwidth]{images/digicode}
+%
+%\textit{Digicode}
+%\end{center}
+%\end{minipage}\hfill
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=.8\textwidth]{images/transistor_ttl_nand}
+%
+%\textit{Transistor TTL (permettant de réaliser des opérations logiques) }
+%\end{center}
+%\end{minipage}\hfill
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=.8\textwidth]{images/inductif}
+%
+%\textit{Détecteur inductif}
+%\end{center}
+%\end{minipage}\hfill
+%\begin{minipage}[c]{.2\linewidth}
+%\begin{center}
+%%\includegraphics[width=\textwidth]{images/capteur_contact}
+%
+%\textit{Détecteur à contact}
+%\end{center}
+%\end{minipage}
+%
+%Un des objectifs de l'automaticien est de concevoir la partie commande qui traite les informations et élabore les ordres. Ce cours étudie le cas où les informations et les ordres élaborés sont des variables binaires.
+
+\begin{center}
+D'après les Sciences de l'Ingéneur en PTSI -- Éditions Ellipses
+
+Laurent Deschamps \& Patrick Beynet
+\end{center}
+
+\section{Réseau industriel}
+\begin{flushright}
+\textit{D’après concours Centrale Supélec.}
+\end{flushright}
+
+Un réseau industriel utilisé pour la supervision de la ligne de production de culasses de moteurs, est Ethernet 100 Mbits/s. Celui-ci relie notamment les différents automates, variateurs et l'ordinateur superviseur. Ce réseau est basé autour d’un équipement appelé « switch » sur lequel chaque équipement est relié via quatre paires torsadées. En réalité, deux seulement servent dans la norme à 100 Mbits/s, une pour l’émission, l’autre pour la réception. Le codage des données sur les paires torsadées est en MLT3 couplé au codage paquet 4B5B. Une trame Ethernet 100 Mbits/s est composée de différents champs. Sa structure est donnée ci-dessous.
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_01}
+\end{center}
+
+
+Le champ « Préambule » est composé de huit octets. Sept octets sont identiques et valent tous en binaire « 10101010 ». Le 8ème octet est appelé SFD (Starting Frame Delimiter) et permet la synchronisation entre l'émetteur et le récepteur et vaut « 10101011 ».
+Les champs « @ MAC Destination » et « @ MAC Source » sont les adresses MAC des cartes réseaux des systèmes récepteur et émetteur. Leur longueur est de six octets.
+Le champ « Type protocole » permet de définir le type de protocole utilisé pour les échanges. Ce champ est de longueur deux octets.
+
+Le champ « Données » comporte les bits informatifs à transmettre. Il est de longueur variable de 0 à 1500 octets.
+
+Le champ « Bourrage » n'est utilisé que lorsque la longueur du champ de données est inférieure à 46 octets. Il a la longueur minimale qui permet de donner à l'ensemble Données + Bourrage une longueur de 46 octets au moins. Il est de longueur variable donc de 0 octet (si au moins 46 octets dans le champ Données) à 46 octets (si 0 octet dans le champ « Données »).
+Le champ « FCS » (Frame Check Sequence) de longueur quatre octets, est ajouté à l'émission pour contrôler la bonne transmission des informations. Le calcul de ce champ est basé sur un CRC (Code à Redondance Cyclique). On précise qu'un bit est envoyé sur le support de transmission à chaque front montant de l'horloge. Un seul émetteur peut émettre à la fois.
+
+\subparagraph{}
+\textit{Déterminer le mode de transmission (série ou parallèle), le type de transmission (synchrone ou asynchrone), et le sens des échanges (simplex, half-duplex ou full-duplex). Justifier les réponses.}
+
+\subparagraph{}
+\textit{Calculer les valeurs des débits utiles minimaux et maximaux.}
+
+\subparagraph{}
+\textit{Calculer les temps nécessaires pour transmettre une trame contenant 0 octet de données, et une trame contenant 1500 octets de données.}
+
+Le signal présent sur le support physique (appelé aussi médium) est modulé par une modulation « MLT – 3 ». Elle consiste à changer le niveau de tension présent sur le support physique dans l'ordre suivant +V, 0, –V, 0, +V, 0, etc. lorsque l'on désire transférer un niveau « 1 » logique. Aucun changement de niveau de tension n'est réalisé lorsque l'on désire transmettre un « 0 » logique. On rappelle qu'un bit est envoyé à chaque front montant de l'horloge.
+
+\subparagraph{}
+\textit{Tracer le chronogramme de la tension présente sur le support de transmission si l'on désire transmettre le premier octet du préambule. Placer en concordance des temps le signal d'horloge. On suppose que le dernier bit à « 1 » transmis avant la transmission de ce préambule a été codé par un niveau de tension égale à -V.}
+
+\section{Exercice 2}
+\setcounter{subparagraph}{0}
+Soit l’architecture Ethernet d’une partie d’un centre de tri de la poste :
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_02}
+\end{center}
+
+\subparagraph{}
+\textit{D’après l’organisation informatique adoptée par la Poste, représentée ci-dessus, identifier la topologie du réseau (de bus, de maille, anneau, étoile ou point à point) et justifier cette solution.}
+
+Une adresse IP est constituée d'une paire (adresse de réseau, adresse de la machine) et appartient à une certaine classe (A, B, C, D ou E) selon la valeur de son premier octet. Elle donne l'espace d'adresses possibles pour chaque classe.
+
+Ainsi, les adresses de classe A sont utilisées pour les très grands réseaux qui comportent entre $2^{24}=16\; 777\; 216$ et $2^{16}=65\; 536$ ordinateurs. La politique actuelle est de ne plus définir de tels réseaux.
+
+Les adresses de classe B sont utilisées pour les réseaux ayant entre $2^8=256$ et $2^{16}=65\; 536$ ordinateurs, 14 bits définissent l'adresse du réseau et 16 bits celle d'une machine sur le réseau. Seules 256 machines sont possibles sur un réseau de classe C dont le nombre de réseau possible dépasse les 2 millions ($= 2^{21}$).
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_03}
+\end{center}
+
+\subparagraph{}
+\textit{Déterminer la classe d’adresse IP utilisée par la Poste.}
+
+
+\subparagraph{}
+\textit{Sélectionner parmi la liste ci-dessous, l’adresse IP de l’ordinateur GP à configurer au réseau Ethernet : 172.17.30.3, 172.17.0.0, 172.16.0.0, 192.17.112.15, 172.17.30.4.}
+
+Structure d’une trame (ou paquet) Ethernet :
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_04}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_05}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_06}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_07}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_08}
+\end{center}
+
+\subparagraph{}
+\textit{Citer l’ordinateur de destination et de source.}
+
+\subparagraph{}
+\textit{Décoder les différents champs et informations transmises par cette trame.}
+
+\section{Exercice 3}
+\setcounter{subparagraph}{0}
+Sur un tramway, l’information « porte verrouillée » est transmise vers le poste de conduite via le bus de terrain MVB. Chaque contact de porte transmet l’information de verrouillage porte ($S_6$) sur la carte électronique embarquée  (EDCU). L’information est ensuite codifiée puis envoyée par la carte électronique au poste de conduite via le bus de terrain MVB. 
+
+Chacune des douze portes possède une adresse codée sur 12 bits. Seul le paramétrage sur la carte électronique des 4 bits de poids faible permet l'identification de la porte. Le tableau ci-dessous (figure 1) montre le paramétrage des portes (un x dans le tableau représente la mise en place d’un cavalier sur la carte électronique). 
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_09}
+\end{center}
+
+\subparagraph{}
+\textit{Montrer comment est transmise l'information par le bus de terrain MVB.
+Pour cela : compléter le tableau ci-dessous (l'indice « H » signifie que le nombre est écrit en base hexadécimale).}
+
+\begin{center}
+\includegraphics[width=.8\textwidth]{images/im_10}
+\end{center}
+
+\subparagraph{}
+\textit{A partir de l’analyse de la présentation du bus dans la méthode 26.3, déterminer les deux trames transmises sur le bus de terrain MVB lorsque :
+\begin{itemize}
+\item le maître interroge la porte 15 sur l’état de son contact de verrouillage;
+\item la porte 15 répond qu'elle n'est pas verrouillée à cause d'un obstacle.
+\end{itemize}
+(Utiliser la lettre x pour les bits dont l'état ne nous intéresse pas ainsi que pour les bits de contrôle.)}
+
+\section{Exercice 4}
+\setcounter{subparagraph}{0}
+\begin{minipage}[c]{.7\linewidth}
+Une voiture haut de gamme comporte plusieurs calculateurs reliés en réseaux par des bus multiplexés dont le bus CAN. 
+La CITRÖEN C6 dispose de trois réseaux utilisant le protocole CAN (Controller  Area  Network) et comportant chacun une dizaine de calculateurs :
+\end{minipage}\hfill
+\begin{minipage}[c]{.25\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/im_11}
+\end{center}
+\end{minipage}
+
+\begin{itemize}
+\item réseau CAN confort (CAN CONF); 
+\item réseau inter systèmes (CAN I/S); 
+\item réseau carrosserie (CAN CAR). 
+\end{itemize}
+
+Le calculateur DSG et une dizaine d’autres, utilisent le bus CAN I/S. Par conséquent, à un instant donné, tous ces calculateurs peuvent être amenés à vouloir transmettre leur message. Pour résoudre le conflit de prise du bus, le protocole CAN utilise une procédure d’arbitrage. Tous les messages sont classés par priorités croissantes selon l’identificateur attribué lors de la conception : on attribue l’identificateur ayant la plus petite valeur au message le plus prioritaire. 
+La norme du protocole du bus CAN définit deux formats :
+\begin{itemize}
+\item version standard CAN 2.A (champ identificateur sur 11 bits);
+\item version étendu CAN 2.B (champ identificateur sur 29 bits).
+\end{itemize}
+Le débit de transmission sur le réseau CAN peut atteindre 1 Mbits/s.
+Deux classes de débits sont également normalisées :
+\begin{itemize}
+\item CAN Low Speed (noté CAN LS), dont le débit peut atteindre les 125 Kbits/s;
+\item CAN High Speed (noté CAN HS), de 125 kbits/s jusqu’à 1 Mbits/s.
+\end{itemize}
+
+La synchronisation des nœuds récepteurs sur le nœud émetteur exploite les transitions entre les niveaux récessif et dominant. Pour éviter une longue suite de niveaux identiques, le gestionnaire du protocole introduit (au niveau de la transmission TxD), après 5 bits de niveaux identiques (dominant ou récessif), un bit supplémentaire de niveau opposé pour casser le rythme, c’est ce qu’on appelle le bit de « bourrage » ou de « stuffing ».
+
+Cette technique allonge bien sûr la longueur de la trame et donc le temps de sa transmission. Quant aux nœuds récepteurs, ils feront l’opération inverse. C'est-à-dire, enlever les bits de « stuffing » (qui peuvent être présents dans le signal RxD) avant de traiter le contenu de la trame.
+
+
+
+Voici un exemple qui illustre la technique de bourrage :
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/im_12}
+\end{center}
+
+\subparagraph{}
+\textit{Donner la taille du champ identificateur du standard CAN 2.A.}
+\subparagraph{}
+\textit{Calculer le nombre d’identificateurs distincts que permet de coder le standard CAN 2.A.}
+
+A un instant donné, trois calculateurs BSI, DSG et CMM, souhaitent émettre leurs messages d’identificateurs respectifs 0x51E, 0x52E et 0x54E.
+\subparagraph{}
+\textit{Identifier le calculateur qui transmettra en premier son message. Justifier la réponse.}
+
+\subparagraph{}
+\textit{Compléter les chronogrammes du processus d’arbitrage.}
+
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/im_13}
+\end{center}
+
+\subparagraph{}
+\textit{Relever les noms des calculateurs et le numéro des instants à partir duquel ils se mettent en position récepteurs (perte du bus).}
+
+Pour éviter de longue suite de bits dominants ou récessifs, chaque contrôleur CAN d’un calculateur introduit volontairement dans la trame à transmettre des bits de bourrage (Stuffing).  
+Le calculateur BSI envoie un message d’identificateur 0x7C1. 
+
+\subparagraph{}
+\textit{Remplir les champs identificateurs du tableau ci-dessous et entourer le ou les bits de bourrage.}
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/im_14}
+\end{center}
+
+Le chronogramme de la figure 2 est relevé sur un oscilloscope et permet le décodage d’une trame CAN. Ce signal est prélevé sur l’entrée TxD de l’interface bus CAN. La durée de la trame complète est de 126 $\mu s$ et  comporte au total 63 bits. 
+
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/im_15}
+\end{center}
+
+\subparagraph{}
+\textit{Délimiter sur ce chronogramme l’identificateur de la trame CAN. Donner sa valeur.}
+\subparagraph{}
+\textit{Déterminer le débit de transmission et en déduire le type de réseaux (CAN LS ou HS) qui véhicule cette trame.}
+
+\section{Exercice 5}
+\setcounter{subparagraph}{0}
+
+On s’intéresse à un récepteur satellite numérique. Ces derniers sont équipés de nombreux circuits de gestion de démodulation ainsi que de traitement de flux numérique.
+
+Le microcontrôleur principal doit pouvoir les configurer et connaître leur état à tout moment, et cela se fait dans notre cas par le Bus I2C.
+\subparagraph{}
+\textit{Présenter de façon succincte l’intérêt du bus I2C.}
+
+\subparagraph{}
+\textit{Donner une description succincte de ce qu’est : un transmetteur, un receveur, un maître, un esclave.}
+\subparagraph{}
+\textit{Décrire de façon succincte (sauf l’arbitrage dont on expliquera en détail la procédure) les notions : de multi-maître, d’arbitrage, de synchronisation.}
+\subparagraph{}
+\textit{Donner l’algorithme (en 9 étapes) de la procédure de communication entre un maître et un esclave.}
+\subparagraph{}
+\textit{Définir les spécifications matérielles des conditions de « Start » et de « Stop ».}
+\subparagraph{}
+\textit{Décrire comment est organisé l’adressage des différents circuits intégrés respectant les spécifications du bus I2C.}
+
+Le composant PCF 8584 est le contrôleur du bus I2C. Il doit communiquer avec le composant TDA 8425 (Hi-Fi Stereo Audio-Processor ) qui contrôle le commutateur audio du décodeur.
+L’adresse I2C, du circuit TDA 8425 est composée de :
+\begin{itemize}
+\item quatre bits de poids forts fixés par le constructeur : A6 A5 A4 A3 = 1 0 0 0;
+\item trois bits de poids faible fixés sur les broches : A2 A1 A0 = 0 0 1;
+\item bit de R/W à 0 (procédure d’écriture).
+\end{itemize}
+
+L’adresse est donc en binaire : $1\; 0\; 0\; 0\; 0\; 0\; 1\; 0_{(2)}$, soit en hexadécimal : $82_H$.
+
+\subparagraph{}
+\textit{Tracer les chronogrammes des signaux SCL et SDA lors de l’écriture par le contrôleur PCD
+8584 des deux octets successifs 00H et F7H dans le circuit TDA 8425.}
+
+Pour information cette action correspond à un réglage du volume (gain) de la voie gauche (VL) à + 6 dB.
+On repèrera sur ce tracé les conditions de « Start » et de « Stop », les acquittements, ainsi que le circuit (contrôleur de bus ou processeur audio) qui, à chaque instant « pilote » les lignes SCL et SDA.
+
+
+
+\end{document}
+
+
+
