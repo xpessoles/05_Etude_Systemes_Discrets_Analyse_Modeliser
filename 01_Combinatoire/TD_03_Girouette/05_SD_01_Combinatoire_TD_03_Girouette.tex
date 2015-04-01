@@ -1,0 +1,112 @@
+\documentclass[10pt]{article}
+\input{style/coursHeadings}
+\input{style/programHeadings}
+\input{style/macros_SII}
+\input{style/macros_Titres}
+\input{style/macros_Frames}
+
+%Si le boolen xp est vrai : compilation pour xabi
+%Sinon compilation Damien
+
+\newif\ifprof
+%\proftrue
+\proffalse
+
+\newif\ifxp
+\xptrue
+%\xpfalse
+
+\newif\iftd
+\tdtrue
+%\tdfalse
+
+
+\usepackage[%
+    pdftitle={},
+    pdfauthor={Xavier Pessoles},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=magenta]{hyperref}
+
+
+\def\discipline{Sciences Industrielles de l'Ingénieur}
+\def\xxtitre{%
+\ifxp
+CI ** : 
+\else
+\fi
+}
+
+\def\xxsoustitre{%
+\ifxp
+Chapitre ** -- 
+\else
+\fi}
+
+\def\xxauteur{%
+\ifxp
+Xavier \textsc{Pessoles}
+\else
+\fi}
+
+\def\xxpied{%
+\ifxp
+CI ** : **\\
+Ch. ** : ** -- Cours TD
+\else
+\fi}
+
+
+
+%---------------------------------------------------------------------------
+
+
+\begin{document}
+\ifxp
+\input{style/enteteXP}
+\else
+\input{style/enteteDI}
+\fi
+
+
+\begin{warn}
+Je compile avec pdfLaTeX.
+\end{warn}
+\setlength{\parskip}{0ex plus 0.2ex minus 0ex}
+ \renewcommand{\contentsname}{}
+ \renewcommand{\baselinestretch}{1}
+
+\tableofcontents
+
+ \renewcommand{\baselinestretch}{1.2}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+
+
+\section{Titre 1}
+
+\subsection{Sous titre 1}
+
+\begin{minipage}[c]{.48\linewidth}
+Le diagramme ci-contre recense les entrées et les sorties du système étudié :
+\begin{itemize}
+\item la variable vent ($V$) est à 1 lorsque le vent est trop fort;
+\item la variable luminosité ($L$) est à 1 lorsque la luminosité devient importante;
+\item la variable pluie ($P$) est à 1 lorsque le taux d’humidité devient important;
+\item la variable Montée ($M$) est à 1 lorsqu’on désire commander la fermeture du store;
+\item la variable descente (D$)$ est à 1 lorsqu’on désire commander l’ouverture du store. 
+\end{itemize}
+\end{minipage} \hfill
+\begin{minipage}[c]{.48\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/ES}
+\end{center}
+\end{minipage} 
+Le store est toujours remonté ($M=1$), sauf en présence de soleil, sans pluie ni vent. Un système mécanique intégré au store coupe le moteur quand le store est complètement remonté bien que la commande soit maintenue.
+
+Les entrées $V$, $L$ et $P$ seront simulées respectivement par 3 entrées ($SW_1$, $SW_2$ et $SW_3$) et les sorties $M$ et $D$ seront représentées par 2 leds ($LED_1$, $LED_2$). Toutes ces désignations sont relatives à la carte d’essai à base d’ispLSI1016 de chez Lattice.
+
+
+\end{document}
+
+
