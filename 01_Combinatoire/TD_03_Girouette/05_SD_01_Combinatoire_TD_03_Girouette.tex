@@ -32,14 +32,14 @@
 \def\discipline{Sciences Industrielles de l'Ingénieur}
 \def\xxtitre{%
 \ifxp
-CI ** : 
+5 : Analyse et modélisation du comportement des systèmes 
 \else
 \fi
 }
 
 \def\xxsoustitre{%
 \ifxp
-Chapitre ** -- 
+Chapitre 1 -- Étude des systèmes combinatoires 
 \else
 \fi}
 
@@ -51,8 +51,9 @@ Xavier \textsc{Pessoles}
 
 \def\xxpied{%
 \ifxp
-CI ** : **\\
-Ch. ** : ** -- Cours TD
+5 : Analyse et modélisation du comportement des systèmes 
+numériques\\
+Ch.1 : Étude des systèmes combinatoires -- TD
 \else
 \fi}
 
@@ -62,30 +63,28 @@ Ch. ** : ** -- Cours TD
 
 
 \begin{document}
-\ifxp
+
 \input{style/enteteXP}
-\else
-\input{style/enteteDI}
-\fi
-
-
-\begin{warn}
-Je compile avec pdfLaTeX.
-\end{warn}
-\setlength{\parskip}{0ex plus 0.2ex minus 0ex}
- \renewcommand{\contentsname}{}
- \renewcommand{\baselinestretch}{1}
-
-\tableofcontents
-
- \renewcommand{\baselinestretch}{1.2}
-\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
 
 
 
-\section{Titre 1}
 
-\subsection{Sous titre 1}
+\section{Store Somfy}
+ 
+\begin{minipage}[c]{.48\linewidth}
+On donne le diagramme des cas d’utilisation et le diagramme des exigences d’un store automatique.
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/uc}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.45\linewidth}
+\begin{center}
+\includegraphics[width=.85\textwidth]{images/req}
+\end{center}
+\end{minipage} 
+
+
+\subsection{Commande automatique du store}
 
 \begin{minipage}[c]{.48\linewidth}
 Le diagramme ci-contre recense les entrées et les sorties du système étudié :
@@ -106,6 +105,121 @@ Le store est toujours remonté ($M=1$), sauf en présence de soleil, sans pluie 
 
 Les entrées $V$, $L$ et $P$ seront simulées respectivement par 3 entrées ($SW_1$, $SW_2$ et $SW_3$) et les sorties $M$ et $D$ seront représentées par 2 leds ($LED_1$, $LED_2$). Toutes ces désignations sont relatives à la carte d’essai à base d’ispLSI1016 de chez Lattice.
 
+
+\subparagraph{}
+\textit{Réaliser la table de vérité correspondant au fonctionnement du store.}
+
+\subparagraph{}
+\textit{Déterminer les équations logiques pour M et pour D. }
+
+\subparagraph{}
+\textit{Simplifier éventuellement vos équations.}
+
+\subparagraph{}
+\textit{Réaliser le logigramme en utilisant les portes de votre choix.}
+
+\subsection{Affichage de la direction du vent}
+
+\begin{minipage}[c]{.7\linewidth}
+Il est possible que l'utilisateur ait à sa disposition une girouette pour connaitre la direction du vent. 
+La direction du vent est décomposée en 8 secteurs de 45° chacun (rose des vents). Chaque secteur est désigné par une combinaison des quatre points cardinaux Nord (N), Est (E), Sud (S) et Ouest (O).
+
+L'information est traitée de la façon suivante : 
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/chaineMesure}
+\end{center}
+
+\end{minipage} \hfill
+\begin{minipage}[c]{.28\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/RoseVents}
+\end{center}
+\end{minipage} 
+
+
+
+La détection de la direction du vent est assurée par une girouette. Celle-ci fournit une information logique codée en binaire réfléchi sur 4 bits représentative de la direction du vent (Y4, Y3, Y2 et Y1, Y1 étant le LSB).
+
+Le premier transcodage permet la traduction de cette information en binaire pur (D4, D3, D2 et D1).
+
+Le second transcodage traduit le mot écrit en binaire pur en une information pouvant être lue sur des afficheurs à 7 segments (7 segments de a à g et deux bits pour sélectionner l’afficheur).
+
+L'affichage de la direction du vent (secteur) est visible sur 2 afficheurs. 
+
+\begin{obj}
+
+Les objectifs sont :
+\begin{itemize}
+\item d'établir la table de vérité du transcodage binaire réfléchi en binaire pur afin d’en déduire les équations logiques. Ces équations seront implémentées dans le circuit programmable.
+\item d’implanter dans un circuit logique programmable la fonction transcodage pour afficher la direction du vent sur deux afficheurs 7 segments directement à partir du code binaire réfléchi.
+\end{itemize}
+
+\end{obj}
+
+\subparagraph{}
+\textit{Réaliser la table de vérité permettant de traduire le code binaire réfléchi en code binaire pur.}
+
+\subparagraph{}
+\textit{Quel est l’intérêt du binaire réfléchi dans le cas de la girouette ? Quel type de capteur est –il possible de trouver dans la girouette ?}
+
+\subparagraph{}
+\textit{Donner les équations de D4, D3, D2 et D1.}
+
+\subparagraph{}
+\textit{Tracer le logigramme afin de réaliser les signaux précédents. }
+
+
+\subsection{Étude du second transcodage : affichage de la direction du vent}
+
+
+\begin{minipage}[c]{.5\linewidth}
+
+Elle traduit le code issu de la girouette (représentatif de la direction du vent) en un code dit 7 segments qui permettra d'afficher la direction du vent. On conservera en entrée le code binaire réfléchi.
+Un afficheur 7 segments est constitué de 7 segments lumineux (leds). Chacun des segments est repéré par une lettre, de a jusqu'à g comme indiqué ci-contre. 
+
+On s’intéresse à l’affichage de la direction Nord ou Sud en fonction de la position du codeur absolu.
+
+\subparagraph{}
+\textit{Exprimer l’équation logique des segments de l’afficheur en fonction des entrées Yi.}
+
+\end{minipage} \hfill
+\begin{minipage}[c]{.15\linewidth}
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/7segments}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.28\linewidth}
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/Orientations}
+\end{center}
+\end{minipage} 
+
+
+
+\subsection*{Documentation du codeur}
+
+\begin{minipage}[c]{.7\linewidth}
+C’est un codeur numérique 110E Vishay. Ce fabricant propose une gamme de plusieurs encodeurs (de 2 à 4bits) fournissant une information absolue ou relative.
+
+\begin{enumerate}
+\item Les cases noircies représentent le « 1 » logique.
+\item La colonne « G » représentent le point commun, relié ici au +5V.
+\item Des résistances de tirage imposent du « 0 » logique en cas de non connexion au +5V via la borne « G ».
+\item Le capteur est branché sur la carte via le connecteur J8.
+\end{enumerate}
+La colonne 1 représente le bit de poids faible (LSB) et la dernière colonne le but de poids faible (MSB). 
+
+\begin{center}
+\includegraphics[width=.95\textwidth]{images/codeur}
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}[c]{.28\linewidth}
+
+\begin{center}
+\includegraphics[width=.9\textwidth]{images/codeur_table}
+\end{center}
+\end{minipage} 
 
 \end{document}
 
