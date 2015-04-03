@@ -70,7 +70,8 @@ Ch.1 : Étude des systèmes combinatoires -- TD
 
 
 \section{Store Somfy}
- 
+ \ifprof
+ \else
 \begin{minipage}[c]{.48\linewidth}
 On donne le diagramme des cas d’utilisation et le diagramme des exigences d’un store automatique.
 \begin{center}
@@ -82,10 +83,14 @@ On donne le diagramme des cas d’utilisation et le diagramme des exigences d’
 \includegraphics[width=.85\textwidth]{images/req}
 \end{center}
 \end{minipage} 
+\fi
 
 
 \subsection{Commande automatique du store}
 
+\ifprof
+
+\else
 \begin{minipage}[c]{.48\linewidth}
 Le diagramme ci-contre recense les entrées et les sorties du système étudié :
 \begin{itemize}
@@ -101,25 +106,73 @@ Le diagramme ci-contre recense les entrées et les sorties du système étudié 
 \includegraphics[width=.95\textwidth]{images/ES}
 \end{center}
 \end{minipage} 
-Le store est toujours remonté ($M=1$), sauf en présence de soleil, sans pluie ni vent. Un système mécanique intégré au store coupe le moteur quand le store est complètement remonté bien que la commande soit maintenue.
+%Le store est toujours remonté ($M=1$), sauf en présence de soleil, sans pluie ni vent. Un système mécanique intégré au store coupe le moteur quand le store est complètement remonté bien que la commande soit maintenue.
 
-Les entrées $V$, $L$ et $P$ seront simulées respectivement par 3 entrées ($SW_1$, $SW_2$ et $SW_3$) et les sorties $M$ et $D$ seront représentées par 2 leds ($LED_1$, $LED_2$). Toutes ces désignations sont relatives à la carte d’essai à base d’ispLSI1016 de chez Lattice.
-
+%Les entrées $V$, $L$ et $P$ seront simulées respectivement par 3 entrées ($SW_1$, $SW_2$ et $SW_3$) et les sorties $M$ et $D$ seront représentées par 2 leds ($LED_1$, $LED_2$). Toutes ces désignations sont relatives à la carte d’essai à base d’ispLSI1016 de chez Lattice.
+\fi
 
 \subparagraph{}
-\textit{Réaliser la table de vérité correspondant au fonctionnement du store.}
+\textit{Réaliser la table de vérité correspondant au fonctionnement du store en utilisant le diagramme des exigences. }
+\ifprof
+\begin{corrige}
+\begin{center}
+\begin{tabular}{|c|c|c||c|c|}
+\hline
+V & L & P & M & D \\
+\hline
+\hline
+0 & 0 & 0 & 1 & 0\\
+0 & 0 & 1 & 0 & 1\\ 
+0 & 1 & 0 & 0 & 1\\ 
+0 & 1 & 1 & 0 & 1\\ 
+1 & 0 & 0 & 1 & 0\\ 
+1 & 0 & 1 & 1 & 0\\ 
+1 & 1 & 0 & 1 & 0\\ 
+1 & 1 & 1 & 1 & 0\\ 
+\hline
+\end{tabular}
+\end{center}
+\end{corrige}
+\else
+\fi
 
 \subparagraph{}
 \textit{Déterminer les équations logiques pour M et pour D. }
+\ifprof
+\begin{corrige}
+$$
+D = 
+\overline{V}\cdot\overline{L}\cdot \overline{P} + 
+\overline{V}\cdot L \cdot \overline{P} +
+\overline{V}\cdot L \cdot P 
+= \overline{V}\cdot \left( L+P\right)
+$$
+$$
+M = V + \overline{P}\cdot\overline{L}
+$$
+\end{corrige}
+\else
+\fi
 
 \subparagraph{}
 \textit{Simplifier éventuellement vos équations.}
+\ifprof
+\begin{corrige}
+\end{corrige}
+\else
+\fi
 
 \subparagraph{}
 \textit{Réaliser le logigramme en utilisant les portes de votre choix.}
+\ifprof
+\begin{corrige}
+\end{corrige}
+\else
+\fi
 
 \subsection{Affichage de la direction du vent}
-
+\ifprof
+\else
 \begin{minipage}[c]{.7\linewidth}
 Il est possible que l'utilisateur ait à sa disposition une girouette pour connaitre la direction du vent. 
 La direction du vent est décomposée en 8 secteurs de 45° chacun (rose des vents). Chaque secteur est désigné par une combinaison des quatre points cardinaux Nord (N), Est (E), Sud (S) et Ouest (O).
@@ -156,11 +209,42 @@ Les objectifs sont :
 
 \end{obj}
 
+\fi
 \subparagraph{}
 \textit{Réaliser la table de vérité permettant de traduire le code binaire réfléchi en code binaire pur.}
+\ifprof
+\begin{corrige}
+\begin{center}
+\begin{tabular}{|c|c|c|c||c|c|c|c|}
+\hline
+$Y_4$ & $Y_3$ & $Y_2$ & $Y_1$ & $D_4$ & $D_3$ & $D_2$ & $D_1$  \\
+\hline
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & \\
+0 & 0 & 0 & 1 & 0 & 0 & \\
+0 & 0 & 1 & 1 & 0 & 0 &  \\
+0 & 0 & 1 & 0 & 0 & 0 & \\ \hline
+0 & 1 & 1 & 0 & 0 & 1 & \\
+0 & 1 & 1 & 1 & 0 & 1 & \\
+0 & 1 & 1 & 1 & 0 & 1 & \\
+0 & 1 & 0 & 0 & 0 & 1 & \\ \hline 
+0 & 1 & 0 & 0 & 1 & 0 & \\ 
+1 & 1 & 0 & 1 & 1 & 0 & \\
+1 & 1 & 0 & 1 & 1 & 0 & \\
+1 & 1 & 1 & 0 & 1 & 0 & \\ \hline 
+1 & 0 & 1 & 0 & 1 & 1 & \\ 
+1 & 0 & 1 & 1 & 1 & 1 & \\
+1 & 0 & 0 & 1 & 1 & 1 & \\
+1 & 0 & 0 & 0 & 1 & 1 & \\ \hline 
+\end{tabular}
+\end{center}
+\end{corrige}
+\else
+\fi
+
 
 \subparagraph{}
-\textit{Quel est l’intérêt du binaire réfléchi dans le cas de la girouette ? Quel type de capteur est –il possible de trouver dans la girouette ?}
+\textit{Quel est l’intérêt du binaire réfléchi dans le cas de la girouette ? Quel type de capteur est - il possible de trouver dans la girouette ?}
 
 \subparagraph{}
 \textit{Donner les équations de D4, D3, D2 et D1.}
